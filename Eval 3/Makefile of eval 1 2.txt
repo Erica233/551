@@ -1,0 +1,107 @@
+CFLAGS=-std=gnu99 -Werror -Wall -pedantic -ggdb3
+all: printCountries printRunningAvg printCumulative printDailyMax
+print%: print%.o pandemic.c
+	gcc $(CFLAGS) pandemic.c $< -o $@
+
+.PHONY: clean
+clean:
+	rm -f *~ printCountries printRunningAvg printCumulative printDailyMax
+
+
+
+
+
+CFLAGS=-std=gnu99 -pedantic -Wall -Werror -ggdb3
+PROGS=story-step1 story-step2 story-step3 story-step4
+OBJS=$(patsubst %,%.o,$(PROGS)) rand_story.o
+all: $(PROGS)
+story-step%: story-step%.o rand_story.o provided.o
+	gcc -o $@ $^
+%.o: %.c
+	gcc $(CFLAGS) -c $<
+
+.PHONY: clean
+clean:
+	rm -f *~ $(PROGS) $(OBJS)
+
+rand_story.o: rand_story.h
+
+
+
+
+
+
+CPPFLAGS=-std=gnu++98 -pedantic -Wall -Werror -ggdb3
+vector2d: main.o vector.o
+	g++ -o vector2d main.o vector.o
+main.o: main.cpp
+	g++ $(CPPFLAGS) -c main.cpp
+vector.o: vector.cpp vector.hpp
+	g++ $(CPPFLAGS) -c vector.cpp
+
+.PHONY: clean
+clean:
+	rm -f *.o *~ vector2d
+
+
+
+
+
+CPPFLAGS=-Wall -Werror -std=gnu++98 -pedantic -ggdb3
+SRCS=$(wildcard *.cpp)
+OBJS=$(patsubst %.cpp, %.o, $(SRCS))
+PROGRAM=points
+
+$(PROGRAM): $(OBJS)
+	g++ $(CPPFLAGS) -o $@ $(OBJS)
+
+%.o: %.cpp point.hpp
+	g++ -c $(CPPFLAGS) $<
+
+clean:
+	rm -f $(OBJS) $(PROGRAM) *~
+
+
+
+
+
+
+CCFLAGS=--std=gnu++98 -pedantic -Wall -Werror -ggdb3
+intArrayTest: IntArray.o test.o
+	g++ -o intArrayTest $(CCFLAGS) IntArray.o test.o
+
+%.o: %.cpp IntArray.h
+	g++ -c $(CCFLAGS) $<
+
+clean:
+	rm -f *.o  *~ intArrayTest
+
+
+
+
+
+
+CCFLAGS=--std=gnu++98 -pedantic -Wall -Werror -ggdb3
+intMatrixTest: IntArray.o IntMatrix.o test.o
+	g++ -o intMatrixTest $(CCFLAGS) IntArray.o IntMatrix.o test.o
+
+%.o: %.cpp IntArray.h IntMatrix.h
+	g++ -c $(CCFLAGS) $<
+
+clean:
+	rm -f *.o  *~ intMatrixTest
+
+
+
+
+
+
+CCFLAGS=--std=gnu++98 -pedantic -Wall -Werror -ggdb3
+matrixTest:  test.o
+	g++ -o matrixTest $(CCFLAGS) test.o
+
+%.o: %.cpp Matrix.h
+	g++ -c $(CCFLAGS) $<
+
+clean:
+	rm -f *.o  *~ matrixTest
