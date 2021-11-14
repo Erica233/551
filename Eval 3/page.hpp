@@ -20,44 +20,16 @@ class Page {
       while (std::getline(file, line)) {
         lines.push_back(line);
       }
-      //print story in the page
+      //store lines into page
       std::vector<std::string>::iterator it = lines.begin();
       while ((*it)[0] != '#') {
+        navigator.push_back(line);
         ++it;
       }
       ++it;
       while (it != lines.end()) {
-        std::cout << *it << std::endl;
+        text.push_back(line);
         ++it;
-      }
-      std::cout << std::endl;
-      //if WIN/LOSE page
-      if (!lines.begin()->compare("WIN")) {
-        std::cout << "Congratulations! You have won. Hooray!\n";
-      }
-      else if (!lines.begin()->compare("LOSE")) {
-        std::cout << "Sorry, you have lost. Better luck next time!\n";
-      }
-
-      //print choices
-      else {
-        std::cout << "What would you like to do?\n";
-        std::cout << std::endl;
-        std::vector<std::string>::iterator jt = lines.begin();
-        int i = 1;
-        while ((*jt)[0] != '#') {
-          std::cout << " " << i << ". ";
-          size_t j;
-          for (j = 0; j < jt->length(); j++) {
-            if ((*jt)[j] == ':') {
-              break;
-            }
-          }
-          j++;
-          std::cout << jt->substr(j) << std::endl;
-          i++;
-          ++jt;
-        }
       }
     }
     else {
@@ -69,5 +41,40 @@ class Page {
 };
 
 std::ostream & operator<<(std::ostream & stream, const Page & page) {
+  //print story in the page
+  std::vector<std::string>::const_iterator it = page.text.begin();
+  while (it != page.text.end()) {
+    stream << *it << std::endl;
+    ++it;
+  }
+  stream << std::endl;
+
+  //if WIN/LOSE page
+  if (!page.navigator.begin()->compare("WIN")) {
+    stream << "Congratulations! You have won. Hooray!\n";
+  }
+  else if (!page.navigator.begin()->compare("LOSE")) {
+    stream << "Sorry, you have lost. Better luck next time!\n";
+  }
+  //print choices
+  else {
+    stream << "What would you like to do?\n";
+    stream << std::endl;
+    std::vector<std::string>::const_iterator jt = page.navigator.begin();
+    int i = 1;
+    while (jt != page.navigator.end()) {
+      stream << " " << i << ". ";
+      size_t j;
+      for (j = 0; j < jt->length(); j++) {
+        if ((*jt)[j] == ':') {
+          break;
+        }
+      }
+      j++;
+      stream << jt->substr(j) << std::endl;
+      i++;
+      ++jt;
+    }
+  }
   return stream;
 }
