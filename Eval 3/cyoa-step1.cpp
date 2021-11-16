@@ -5,7 +5,7 @@ int main(int argc, char ** argv) {
     std::cerr << "Usage: program inputFile\n";
     return EXIT_FAILURE;
   }
-  //store page
+  //store and printpage
   Page page(argv[1]);
   page.store_story(argv[1]);
   std::cout << page;
