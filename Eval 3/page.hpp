@@ -8,22 +8,13 @@
 
 class Page {
  private:
-  int page_num;
+  std::string page_name;
   std::vector<std::string> navigator;
   std::vector<std::string> text;
 
  public:
-  Page(char * filename) {
-
-  }
-
+  Page(char * filename) : page_name(filename) {}
   void store_story(char * filename) {
-    //int num;
-    std::string s;
-    std::stringstream page_name;
-    page_name << filename;
-    page_name >> s;
-    std::cout << "filename: " << s << std::endl;
     //reference: MLP079_sort_cpp
     std::ifstream file;
     file.open(filename);
@@ -47,7 +38,9 @@ class Page {
     }
     else {
       std::cerr << "Failed to open file\n";
+      exit(EXIT_FAILURE);
     }
+    file.close();
   }
 
   friend std::ostream & operator<<(std::ostream & stream, const Page & page);
@@ -55,14 +48,12 @@ class Page {
 
 std::ostream & operator<<(std::ostream & stream, const Page & page) {
   //print story in the page
-  stream << "overload <<\n";
   std::vector<std::string>::const_iterator it = page.text.begin();
   while (it != page.text.end()) {
     stream << *it << std::endl;
     ++it;
   }
   stream << std::endl;
-
   //if WIN/LOSE page
   if (!page.navigator.begin()->compare("WIN")) {
     stream << "Congratulations! You have won. Hooray!\n";
@@ -78,7 +69,14 @@ std::ostream & operator<<(std::ostream & stream, const Page & page) {
     int i = 1;
     while (jt != page.navigator.end()) {
       stream << " " << i << ". ";
-
+      size_t j;
+      for (j = 0; j < jt->length(); j++) {
+        if ((*jt)[j] == ':') {
+          break;
+        }
+      }
+      j++;
+      stream << jt->substr(j) << std::endl;
       i++;
       ++jt;
     }
