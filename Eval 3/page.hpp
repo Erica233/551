@@ -7,11 +7,13 @@
 
 class Page {
  private:
+  int page_num;
   std::vector<std::string> navigator;
   std::vector<std::string> text;
 
  public:
   Page(char * filename) {
+    //reference: MLP079_sort_cpp
     std::ifstream file;
     file.open(filename);
     if (file.is_open()) {
@@ -23,12 +25,12 @@ class Page {
       //store lines into page
       std::vector<std::string>::iterator it = lines.begin();
       while ((*it)[0] != '#') {
-        navigator.push_back(line);
+        navigator.push_back(*it);
         ++it;
       }
       ++it;
       while (it != lines.end()) {
-        text.push_back(line);
+        text.push_back(*it);
         ++it;
       }
     }
@@ -42,6 +44,7 @@ class Page {
 
 std::ostream & operator<<(std::ostream & stream, const Page & page) {
   //print story in the page
+  stream << "overload <<\n";
   std::vector<std::string>::const_iterator it = page.text.begin();
   while (it != page.text.end()) {
     stream << *it << std::endl;
@@ -63,15 +66,9 @@ std::ostream & operator<<(std::ostream & stream, const Page & page) {
     std::vector<std::string>::const_iterator jt = page.navigator.begin();
     int i = 1;
     while (jt != page.navigator.end()) {
+      std::cout << " " << i << ". ";
       stream << " " << i << ". ";
-      size_t j;
-      for (j = 0; j < jt->length(); j++) {
-        if ((*jt)[j] == ':') {
-          break;
-        }
-      }
-      j++;
-      stream << jt->substr(j) << std::endl;
+
       i++;
       ++jt;
     }
