@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -13,6 +14,16 @@ class Page {
 
  public:
   Page(char * filename) {
+
+  }
+
+  void store_story(char * filename) {
+    //int num;
+    std::string s;
+    std::stringstream page_name;
+    page_name << filename;
+    page_name >> s;
+    std::cout << "filename: " << s << std::endl;
     //reference: MLP079_sort_cpp
     std::ifstream file;
     file.open(filename);
@@ -66,7 +77,6 @@ std::ostream & operator<<(std::ostream & stream, const Page & page) {
     std::vector<std::string>::const_iterator jt = page.navigator.begin();
     int i = 1;
     while (jt != page.navigator.end()) {
-      std::cout << " " << i << ". ";
       stream << " " << i << ". ";
 
       i++;
