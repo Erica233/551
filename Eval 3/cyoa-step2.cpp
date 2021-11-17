@@ -5,6 +5,7 @@ int main(int argc, char ** argv) {
     std::cerr << "Usage: program inputFile\n";
     return EXIT_FAILURE;
   }
+  //store story
   Story story(argv[1]);
   story.store_story();
 
