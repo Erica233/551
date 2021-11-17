@@ -23,7 +23,7 @@ class Page {
   void store_page() {
     //store path
     //reference: string::find in cplusplus.com
-    std::cout << "\nstore_page(): \npath: " << path << std::endl;
+    //std::cout << "\nstore_page(): \npath: " << path << std::endl;
     std::size_t found;
     std::string num;
     std::string former_part("/page");
@@ -33,7 +33,7 @@ class Page {
     if (found != std::string::npos) {
       dir_name = path.substr(0, found);
       page_name = path.substr(found + 1);
-      std::cout << "dir_name: " << dir_name << "\npage_name: " << page_name << std::endl;
+      //std::cout << "dir_name: " << dir_name << "\npage_name: " << page_name << std::endl;
     }
     else {
       std::cerr << "invalid input file name\n";
@@ -43,7 +43,7 @@ class Page {
     if (found_tail != std::string::npos) {
       num = path.substr(found + former_part.length(),
                         found_tail - found - former_part.length());
-      std::cout << "num: " << num << std::endl;
+      //std::cout << "num: " << num << std::endl;
     }
     else {
       std::cerr << "invalid input file name\n";
@@ -51,13 +51,14 @@ class Page {
     }
     std::stringstream num_ss(num);
     num_ss >> page_num;
-    std::cout << "page_num: " << page_num << std::endl;
+    //std::cout << "page_num: " << page_num << std::endl;
     //reference: MLP079_sort_cpp
     std::ifstream file;
     //reference: string::c_str in cplusplus.com
     char * cpath = new char[path.length() + 1];
     std::strcpy(cpath, path.c_str());  //remeber to delete[]
     file.open(cpath);
+    delete[] cpath;
     if (file.is_open()) {
       std::string line;
       std::vector<std::string> lines;
@@ -81,7 +82,7 @@ class Page {
       exit(EXIT_FAILURE);
     }
     file.close();
-    delete[] cpath;
+    //delete[] cpath;
   }
 
   friend std::ostream & operator<<(std::ostream & stream, const Page & page);
