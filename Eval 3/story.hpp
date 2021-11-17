@@ -16,25 +16,42 @@ class Story {
     int i = 1;
     std::string former_part("/page");
     std::string latter_part(".txt");
-    std::stringstream num;
-    num << i;
-    std::string filename = story_name + former_part + num.str() + latter_part;
-    //reference: string::c_str in cplusplus.com (remember to delete[])
-    char * cfilename = new char[filename.length() + 1];
-    std::strcpy(cfilename, filename.c_str());
-
-    Page page1(cfilename);
-    page1.store_page();
-    std::cout << page1;
-    delete[] cfilename;
-    //concate to page1.txt
-    //open page1.txt
-    /*
     while (1) {
-      Page curr_page(filename);
-      curr_page.store_page();
-      pages_vec.push_back(curr_page);
-      }*/
+      std::cout << "\n-------------" << i << "th page: ----------------\n";
+      std::stringstream num;
+      num << i;
+      std::string filename = story_name + former_part + num.str() + latter_part;
+      //reference: string::c_str in cplusplus.com (remember to delete[])
+      char * cfilename = new char[filename.length() + 1];
+      std::strcpy(cfilename, filename.c_str());
+
+      std::ifstream file;
+      file.open(cfilename);
+
+      if (!file.is_open()) {
+        std::cout << "failed to open\n";
+        delete[] cfilename;
+        if (i == 1) {
+          //delete[] cfilename;
+          std::cerr << "No page1.txt\n";
+          exit(EXIT_FAILURE);
+        }
+        else {
+          std::cout << "last page\n";
+          break;
+        }
+      }
+      file.close();
+
+      Page page(cfilename);
+      page.store_page();
+
+      delete[] cfilename;
+
+      pages_vec.push_back(page);
+      std::cout << pages_vec[i - 1];
+
+      i++;
+    }
   }
 };
-fm1
