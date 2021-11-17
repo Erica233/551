@@ -7,7 +7,7 @@ int main(int argc, char ** argv) {
   }
   //store and print page
   Page page(argv[1]);
-  page.store_story(argv[1]);
+  page.store_page(argv[1]);
   std::cout << page;
   return EXIT_SUCCESS;
 }
