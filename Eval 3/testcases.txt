@@ -1,7 +1,12 @@
 #error
 cyoa-step1 invalid.txt
 cyoa-step1 no_page1/page1.txt
-cyoa-step1 no_page1
+cyoa-step2 no_page1
+cyoa-step2 broken1
+cyoa-step2 lack_ref
+cyoa-step2 lack_lose
+cyoa-step2 lack_win
 
 #success
 cyoa-step1 story1/page1.txt
+cyoa-step2 unreachable_cycle
