@@ -3,23 +3,26 @@
 #include <cstring>
 #include <fstream>
 #include <iostream>
+#include <map>
 #include <sstream>
 #include <string>
 #include <vector>
 
 class Page {
  private:
-  int page_num;
+  size_t page_num;
   std::string path;
   std::string dir_name;
   std::string page_name;
   std::vector<std::string> navigator;
   std::vector<std::string> text;
+  std::map<size_t, size_t> option_pagenum;
 
  public:
   //explicit Page(int n) : page_num(n) {}
   explicit Page(char * filename) : path(filename) {}
-  //void read_story(){}
+  std::vector<std::string> & get_navigator() { return navigator; }
+  size_t get_next_page_num(size_t option_num) { return option_pagenum[option_num]; }
   void store_page() {
     //store path
     //reference: string::find in cplusplus.com
@@ -66,10 +69,38 @@ class Page {
         lines.push_back(line);
       }
       //store lines into page
+      size_t option_num = 1;
       std::vector<std::string>::iterator it = lines.begin();
-      while ((*it)[0] != '#') {
+      if (!it->compare("WIN") || !it->compare("LOSE")) {
+        //std::cout << "win page\n\n";
         navigator.push_back(*it);
         ++it;
+      }
+      else {
+        while ((*it)[0] != '#') {
+          navigator.push_back(*it);
+          //store option_pagenum
+
+          //reference: string::find in cplusplus.com
+          std::size_t found;
+          std::string option;
+          found = it->find(":");
+          if (found != std::string::npos) {
+            option = it->substr(0, it->length() - found);
+          }
+          else {
+            std::cerr << "Invalid page: option lack ':'\n";
+            exit(EXIT_FAILURE);
+          }
+          size_t option_page_num;
+          std::stringstream option_ss(option);
+          option_ss >> option_page_num;
+          option_pagenum[option_num] = option_page_num;
+          //std::cout << "option" << option_num << " - " << option_page_num << std::endl;
+
+          option_num++;
+          ++it;
+        }
       }
       ++it;
       while (it != lines.end()) {
