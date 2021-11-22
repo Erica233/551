@@ -1,13 +1,15 @@
 #error
 cyoa-step1 invalid.txt
 cyoa-step1 no_page1/page1.txt
-cyoa-step2 no_page1
-cyoa-step2 broken1
-cyoa-step2 lack_ref
-cyoa-step2 lack_lose
-cyoa-step2 lack_win
-cyoa-step2 two_cycle
+cyoa-step2 no_page1 < no_page1/input1.txt
+cyoa-step2 broken1 < no_page1/input1.txt
+cyoa-step2 lack_ref < lack_ref/input1.txt
+cyoa-step2 lack_lose < lack_lose/input1.txt
+cyoa-step2 lack_win < lack_win/input1.txt
+cyoa-step2 two_cycle < two_cycle/input1.txt
+cyoa-step2 story1
 
 #success
 cyoa-step1 story1/page1.txt
 cyoa-step2 unreachable_cycle < unreachable_cycle/input1.txt
+cyoa-step2 two_cycle2 < two_cycle2/input1.txt
