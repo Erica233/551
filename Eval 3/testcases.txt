@@ -6,7 +6,8 @@ cyoa-step2 broken1
 cyoa-step2 lack_ref
 cyoa-step2 lack_lose
 cyoa-step2 lack_win
+cyoa-step2 two_cycle
 
 #success
 cyoa-step1 story1/page1.txt
-cyoa-step2 unreachable_cycle
+cyoa-step2 unreachable_cycle < unreachable_cycle/input1.txt
