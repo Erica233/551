@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <queue>
 #include <set>
 
 #include "page.hpp"
@@ -12,9 +13,54 @@ class Story {
   std::vector<size_t> lose_page_num;
   std::vector<Page> pages_vec;
   std::set<size_t> valid_page_num;
+  std::vector<std::set<size_t> > neighbors;
 
  public:
   Story(char * dir) : story_name(dir), win(0), lose(0) {}
+  void printDepth() {
+    for (size_t x = 0; x < pages_vec.size(); x++) {
+      std::cout << "page " << x + 1 << "'s depth: " << pages_vec[x].get_depth() << "\n";
+    }
+  }
+  void cal_depth() {
+    //printDepth();
+    //bfs
+    //reference: psuedo-code in AOP Chapter 25.3.3
+    std::set<size_t> visited;
+    std::queue<size_t> queue;
+    size_t i = 1;
+    pages_vec[i - 1].set_depth(0);
+    queue.push(i);
+    visited.insert(i);
+    size_t curr;
+    std::set<size_t>::iterator jt;
+    while (queue.size() != 0) {
+      curr = queue.front();
+      queue.pop();
+      for (std::set<size_t>::iterator it = neighbors[curr - 1].begin();
+           it != neighbors[curr - 1].end();
+           ++it) {
+        if (visited.find(*it) == visited.end()) {
+          if (pages_vec[(*it) - 1].get_depth() > pages_vec[curr - 1].get_depth() + 1) {
+            pages_vec[(*it) - 1].set_depth(pages_vec[curr - 1].get_depth() + 1);
+          }
+          visited.insert(*it);
+          queue.push(*it);
+        }
+      }
+    }
+    //printDepth();
+    for (size_t i = 0; i < pages_vec.size(); i++) {
+      std::cout << "Page " << i + 1;
+      if (pages_vec[i].get_depth() == std::numeric_limits<unsigned int>::max()) {
+        std::cout << "is not reachable\n";
+      }
+      else {
+        std::cout << ":" << pages_vec[i].get_depth() << std::endl;
+      }
+    }
+  }
+
   //Page& get_pages_vec(){return }
   std::vector<Page> & get_pages_vec() { return pages_vec; }
   bool is_end_page(size_t n) {
@@ -66,6 +112,8 @@ class Story {
           //std::cout << "option page number: " << option_page_num << std::endl;
           if (0 < option_page_num && option_page_num <= pages_vec.size()) {
             //std::cout << option_page_num << " is a referenced page number\n";
+            neighbors[i].insert(option_page_num);
+            //            std::cout << "i=" << i << " j=" << j << " neighbors" << option_page_num;
             valid_page_num.insert(option_page_num);
           }
           else {
@@ -76,6 +124,7 @@ class Story {
         }
       }
     }
+    //printNeighbor();
     for (std::set<size_t>::iterator it = valid_page_num.begin();
          it != valid_page_num.end();
          ++it) {
@@ -130,6 +179,20 @@ class Story {
       //std::cout << pages_vec[i - 1];
 
       i++;
+    }
+    neighbors.resize(pages_vec.size());
+    //std::cout << "neighbor.size: " << neighbors.size();
+    //printNeighbor();
+  }
+  void printNeighbor() {
+    std::cout << "neighbor.size: " << neighbors.size() << std::endl;
+    for (size_t i = 0; i < neighbors.size(); i++) {
+      std::cout << "set size: " << neighbors[i].size() << " page " << i + 1 << ": ";
+      for (std::set<size_t>::iterator it = neighbors[i].begin(); it != neighbors[i].end();
+           ++it) {
+        std::cout << *it << ", ";
+      }
+      std::cout << "\n";
     }
   }
 };
