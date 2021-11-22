@@ -3,6 +3,7 @@
 #include <cstring>
 #include <fstream>
 #include <iostream>
+#include <limits>
 #include <map>
 #include <sstream>
 #include <string>
@@ -10,6 +11,7 @@
 
 class Page {
  private:
+  unsigned int depth;
   size_t page_num;
   std::string path;
   std::string dir_name;
@@ -20,7 +22,12 @@ class Page {
 
  public:
   //explicit Page(int n) : page_num(n) {}
-  explicit Page(char * filename) : path(filename) {}
+  Page() : depth(std::numeric_limits<unsigned int>::max()) {}
+  explicit Page(char * filename) :
+      depth(std::numeric_limits<unsigned int>::max()),
+      path(filename) {}
+  unsigned int get_depth() { return depth; }
+  void set_depth(unsigned int d) { depth = d; }
   std::vector<std::string> & get_navigator() { return navigator; }
   size_t get_next_page_num(size_t option_num) { return option_pagenum[option_num]; }
   void store_page() {
