@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <set>
 
 #include "page.hpp"
@@ -7,12 +8,27 @@ class Story {
   std::string story_name;
   int win;
   int lose;
+  std::vector<size_t> win_page_num;
+  std::vector<size_t> lose_page_num;
   std::vector<Page> pages_vec;
   std::set<size_t> valid_page_num;
 
  public:
   Story(char * dir) : story_name(dir), win(0), lose(0) {}
-
+  //Page& get_pages_vec(){return }
+  std::vector<Page> & get_pages_vec() { return pages_vec; }
+  bool is_end_page(size_t n) {
+    std::vector<size_t>::iterator lose =
+        std::find(lose_page_num.begin(), lose_page_num.end(), n);
+    std::vector<size_t>::iterator win =
+        std::find(win_page_num.begin(), win_page_num.end(), n);
+    if (win != win_page_num.end() || lose != lose_page_num.end()) {
+      return true;
+    }
+    return false;
+  }
+  Page & get_page_n(size_t n) { return pages_vec[n - 1]; }
+  size_t get_story_size() { return pages_vec.size(); }
   void check_valid_story() {
     //    std::cout << "check_valid_story(): \n";
     //std::cout << "pages_vec.size(): " << pages_vec.size() << std::endl;
@@ -23,10 +39,12 @@ class Story {
       if (!navigator[0].compare("WIN")) {
         //std::cout << "win page\n\n";
         win = 1;
+        win_page_num.push_back(i + 1);
       }
       else if (!navigator[0].compare("LOSE")) {
         //std::cout << "lose page\n\n";
         lose = 1;
+        lose_page_num.push_back(i + 1);
       }
       else {
         //std::cout << "page with options: \n";
