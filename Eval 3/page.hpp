@@ -1,3 +1,5 @@
+#include <cerrno>
+#include <climits>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -14,8 +16,8 @@ class Page {
   unsigned int depth;
   size_t page_num;
   std::string path;
-  std::string dir_name;
-  std::string page_name;
+  //std::string dir_name;
+  //std::string page_name;
   std::vector<std::string> navigator;
   std::vector<std::string> text;
   std::map<size_t, size_t> option_pagenum;
@@ -41,8 +43,8 @@ class Page {
     found = path.find(former_part);
     //found = path.find("/path");
     if (found != std::string::npos) {
-      dir_name = path.substr(0, found);
-      page_name = path.substr(found + 1);
+      //dir_name = path.substr(0, found);
+      //page_name = path.substr(found + 1);
       //std::cout << "dir_name: " << dir_name << "\npage_name: " << page_name << std::endl;
     }
     else {
@@ -59,9 +61,32 @@ class Page {
       std::cerr << "invalid input file name\n";
       exit(EXIT_FAILURE);
     }
+    /*
     std::stringstream num_ss(num);
     num_ss >> page_num;
-    //std::cout << "page_num: " << page_num << std::endl;
+    std::cout << "num_ss: " << num_ss.str() << std::endl;
+    std::cout << "page_num: " << page_num << std::endl;
+    
+    //reference: std::string::c_str at cplusplus.com
+    char * num_cstr = new char [num.length()+1];
+    std::strcpy(num_cstr, num.c_str());
+    */
+    char * endptr;
+    errno = 0;
+    page_num = strtoul(num.c_str(), &endptr, 10);
+    if ((errno == ERANGE && page_num == ULONG_MAX) || (page_num == 0 && errno != 0)) {
+      std::cerr << "Page number invalid\n";
+      exit(EXIT_FAILURE);
+    }
+    if (endptr == num.c_str()) {
+      std::cerr << "No digits were found\n";
+      exit(EXIT_FAILURE);
+    }
+    if (*endptr != '\0') {
+      std::cerr << "Page number invalid\n";
+      exit(EXIT_FAILURE);
+    }
+
     //reference: MLP079_sort_cpp
     std::ifstream file;
     //reference: string::c_str in cplusplus.com
