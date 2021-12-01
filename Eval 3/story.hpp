@@ -93,9 +93,11 @@ class Story {
         lose_page_num.push_back(i + 1);
       }
       else {
+        std::vector<size_t> & option_pagenums = pages_vec[i].get_option_pagenums();
         //std::cout << "page with options: \n";
-        for (size_t j = 0; j < navigator.size(); j++) {
-          //reference: string::find in cplusplus.com
+        for (size_t j = 0; j < option_pagenums.size(); j++) {
+          /*
+	  //reference: string::find in cplusplus.com
           std::size_t found;
           std::string option;
           found = navigator[j].find(":");
@@ -109,12 +111,13 @@ class Story {
           size_t option_page_num;
           std::stringstream option_ss(option);
           option_ss >> option_page_num;
+	  */
           //std::cout << "option page number: " << option_page_num << std::endl;
-          if (0 < option_page_num && option_page_num <= pages_vec.size()) {
+          if (0 < option_pagenums[j] && option_pagenums[j] <= pages_vec.size()) {
             //std::cout << option_page_num << " is a referenced page number\n";
-            neighbors[i].insert(option_page_num);
+            neighbors[i].insert(option_pagenums[j]);
             //            std::cout << "i=" << i << " j=" << j << " neighbors" << option_page_num;
-            valid_page_num.insert(option_page_num);
+            valid_page_num.insert(option_pagenums[j]);
           }
           else {
             //std::cout << option_page_num << "not referenced page number\n";
@@ -195,4 +198,5 @@ class Story {
       std::cout << "\n";
     }
   }
+  friend std::ostream & operator<<(std::ostream & stream, const Story & story);
 };
