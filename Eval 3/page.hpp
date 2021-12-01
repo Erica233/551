@@ -84,38 +84,6 @@ class Page {
     page_num = check_page_num(num);
   }
   void store_page() {
-    /*
-    //store path
-    //reference: string::find in cplusplus.com
-    //std::cout << "\nstore_page(): \npath: " << path << std::endl;
-    std::size_t found;
-    std::string num;
-    std::string former_part("/page");
-    std::string latter_part(".txt");
-    found = path.find(former_part);
-    //found = path.find("/path");
-    if (found != std::string::npos) {
-      //dir_name = path.substr(0, found);
-      //page_name = path.substr(found + 1);
-      //std::cout << "dir_name: " << dir_name << "\npage_name: " << page_name << std::endl;
-    }
-    else {
-      std::cerr << "invalid input file name\n";
-      exit(EXIT_FAILURE);
-    }
-    std::size_t found_tail = path.find(latter_part);
-    if (found_tail != std::string::npos) {
-      num = path.substr(found + former_part.length(),
-                        found_tail - found - former_part.length());
-      //std::cout << "num: " << num << std::endl;
-    }
-    else {
-      std::cerr << "invalid input file name\n";
-      exit(EXIT_FAILURE);
-    }
-
-    page_num = check_page_num(num);
-    */
     check_path_format();
     //reference: MLP079_sort_cpp
     std::ifstream file;
