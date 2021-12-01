@@ -1,0 +1,39 @@
+#error
+story-step1 s1oddblank.txt
+story-step1
+story-step1 story.txt story2.txt
+story-step1 mulinvalid.txt
+story-step1 nonexistfile.txt
+story-step2 s2n.txt
+story-step3 words.txt s3sb4chr.txt
+story-step3 words.txt s3safterchr.txt
+story-step3 words.txt s3snegnum.txt
+story-step3 words.txt s3snonexistcat.txt
+story-step3 words.txt s3soutrange.txt
+story-step3 s3wnegnum.txt s3snegnum.txt
+story-step3 words.txt s3szero.txt
+story-step3 words.txt s3sminusa.txt
+story-step3 story.txt words.txt
+
+#success
+story-step1 story.txt
+story-step1 story2.txt
+story-step1 s1noblank.txt
+story-step1 blankstartend.txt
+story-step1 consecutiveblanks.txt
+story-step1 mulvalid.txt
+story-step2 words.txt
+story-step2 s2oneword.txt
+story-step2 s2empty.txt
+story-step2 s2empty2.txt
+story-step2 s2twocomma.txt
+story-step2 s2repeatword.txt
+story-step3 words.txt story.txt
+story-step3 words.txt story2.txt
+story-step3 s3wb4chr.txt s3sb4chr.txt
+story-step3 s3wafterchr.txt s3safterchr.txt
+story-step3 s3wfloat.txt s3sfloat.txt
+story-step3 s3wzero.txt s3szero.txt
+story-step3 s3wminusa.txt s3sminusa.txt
+story-step4 word.txt story.txt
+story-step4 word.txt story2.txt
