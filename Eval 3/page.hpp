@@ -85,6 +85,54 @@ class Page {
     }
     page_num = check_page_num(num);
   }
+  size_t store_navigator(std::vector<std::string> & lines) {
+    //store lines into page
+    //size_t option_num = 1;
+    size_t line_slash;
+    if (!lines[0].compare("WIN") || !lines[0].compare("LOSE")) {
+      //std::cout << "win page\n\n";
+      navigator.push_back(lines[0]);
+      if (lines[1][0] != '#') {
+        std::cerr << "lack slash\n";
+        exit(EXIT_FAILURE);
+      }
+      line_slash = 1;
+    }
+    else {
+      bool slash = false;
+      for (size_t i = 0; i < lines.size(); i++) {
+        //std::vector<std::string>::iterator it = lines.begin();
+        if (lines[i][0] != '#') {
+          //navigator.push_back(*it);
+          //store option_pagenum
+          //reference: string::find in cplusplus.com
+          std::size_t found;
+          std::string option;
+          found = lines[i].find(":");
+          if (found != std::string::npos) {
+            option = lines[i].substr(0, found);
+          }
+          else {
+            std::cerr << "Invalid page: option lack ':'\n";
+            exit(EXIT_FAILURE);
+          }
+          option_pagenums.push_back(check_page_num(option));
+          //std::string option_text = it->substr(found+1);
+          navigator.push_back(lines[i].substr(found + 1));
+        }
+        else {
+          slash = true;
+          line_slash = i;
+          break;
+        }
+      }
+      if (slash == false) {
+        std::cerr << "No slash\n";
+        exit(EXIT_FAILURE);
+      }
+    }
+    return line_slash;
+  }
   void store_page() {
     check_path_format();
     //std::cout << "after check_path_format\n";
@@ -101,51 +149,8 @@ class Page {
       while (std::getline(file, line)) {
         lines.push_back(line);
       }
-      //store lines into page
-      //size_t option_num = 1;
       size_t line_slash;
-      if (!lines[0].compare("WIN") || !lines[0].compare("LOSE")) {
-        //std::cout << "win page\n\n";
-        navigator.push_back(lines[0]);
-        if (lines[1][0] != '#') {
-          std::cerr << "lack slash\n";
-          exit(EXIT_FAILURE);
-        }
-        line_slash = 1;
-      }
-      else {
-        bool slash = false;
-        for (size_t i = 0; i < lines.size(); i++) {
-          //std::vector<std::string>::iterator it = lines.begin();
-          if (lines[i][0] != '#') {
-            //navigator.push_back(*it);
-            //store option_pagenum
-            //reference: string::find in cplusplus.com
-            std::size_t found;
-            std::string option;
-            found = lines[i].find(":");
-            if (found != std::string::npos) {
-              option = lines[i].substr(0, found);
-            }
-            else {
-              std::cerr << "Invalid page: option lack ':'\n";
-              exit(EXIT_FAILURE);
-            }
-            option_pagenums.push_back(check_page_num(option));
-            //std::string option_text = it->substr(found+1);
-            navigator.push_back(lines[i].substr(found + 1));
-          }
-          else {
-            slash = true;
-            line_slash = i;
-            break;
-          }
-        }
-        if (slash == false) {
-          std::cerr << "No slash\n";
-          exit(EXIT_FAILURE);
-        }
-      }
+      line_slash = store_navigator(lines);
       for (size_t i = line_slash + 1; i < lines.size(); i++) {
         text.push_back(lines[i]);
       }
@@ -185,23 +190,6 @@ std::ostream & operator<<(std::ostream & stream, const Page & page) {
       stream << " " << i + 1 << ". ";
       stream << page.navigator[i] << std::endl;
     }
-    /*
-    std::vector<std::string>::const_iterator jt = page.navigator.begin();
-    int i = 1;
-    while (jt != page.navigator.end()) {
-      stream << " " << i << ". ";
-      size_t j;
-      for (j = 0; j < jt->length(); j++) {
-        if ((*jt)[j] == ':') {
-          break;
-        }
-      }
-      j++;
-      stream << jt->substr(j) << std::endl;
-      i++;
-      ++jt;
-    }
-    */
   }
   return stream;
 }
