@@ -1,0 +1,45 @@
+#error
+printCountries s11in.csv
+printCountries s1longcountry.csv
+printCountries s1largerppl.csv
+printCountries s1noppl.csv
+printCountries s12empty.csv
+printCountries s1empty2.csv
+printCountries s13in2.csv
+printCountries s1alphappl2.csv
+printCountries s1empty3.csv
+printCountries s12comma.csv
+printRunningAvg s2i1.csv s2negative.csv
+printRunningAvg s2i1.csv s2nodate.csv
+printRunningAvg s2i1.csv s2china.csv
+printDailyMax s4i1nocountry.csv s4zero.csv
+printDailyMax population.csv s4zero.csv
+printDailyMax population.csv s42zero.csv
+printDailyMax s4i1.csv daily_small.csv
+
+#success
+printCountries s1v1.csv
+printCountries s13in.csv
+printCountries s1emptycountry.csv
+printCountries s1negative.csv
+printCountries s1alphappl.csv
+printCountries s1emptycountry2.csv
+printCountries s1fraction.csv
+printCountries s1empty.csv
+printCountries s10ppl.csv
+printCountries s1space.csv
+printRunningAvg population.csv daily_small.csv
+printRunningAvg s2i1.csv s2i2.csv
+printRunningAvg s2i1.csv s26data.csv
+printRunningAvg s2i1.csv s27data.csv
+printRunningAvg s2i1.csv s2fraction.csv
+printRunningAvg s2i1.csv s2text.csv
+printRunningAvg s2i1.csv s2numtext.csv
+printRunningAvg s2i1.csv s2textnum.csv
+printRunningAvg s2i1.csv s2nocase.csv
+printRunningAvg s2i1.csv s2empty.csv
+printCumulative population.csv daily_small.csv
+printCumulative s3i1.csv s3i2.csv
+printDailyMax population.csv daily_small.csv
+printDailyMax s4i1.csv s4zero.csv
+printDailyMax s4i2.csv s42zero.csv
