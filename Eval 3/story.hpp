@@ -127,7 +127,22 @@ class Story {
       exit(EXIT_FAILURE);
     }
   }
-
+  bool check_page_available(int page_num, char * cfilename) {
+    std::ifstream file;
+    file.open(cfilename);
+    if (!file.is_open()) {
+      //delete[] cfilename;
+      if (page_num == 1) {
+        std::cerr << "No page1.txt\n";
+        exit(EXIT_FAILURE);
+      }
+      else {
+        return false;
+      }
+    }
+    file.close();
+    return true;
+  }
   void store_story() {
     //std::cout << "store_story(): \nstory_name: " << story_name << "\nwin=" << win << " lose=" << lose << std::endl;
     int i = 1;
@@ -141,29 +156,15 @@ class Story {
       //reference: string::c_str in cplusplus.com (remember to delete[])
       char * cfilename = new char[filename.length() + 1];
       std::strcpy(cfilename, filename.c_str());
-
-      std::ifstream file;
-      file.open(cfilename);
-
-      if (!file.is_open()) {
+      if (!check_page_available(i, cfilename)) {
         delete[] cfilename;
-        if (i == 1) {
-          std::cerr << "No page1.txt\n";
-          exit(EXIT_FAILURE);
-        }
-        else {
-          break;
-        }
+        break;
       }
-      file.close();
-
       Page page(cfilename);
       page.store_page();
       delete[] cfilename;
-
       pages_vec.push_back(page);
       //std::cout << pages_vec[i - 1];
-
       i++;
     }
     neighbors.resize(pages_vec.size());
