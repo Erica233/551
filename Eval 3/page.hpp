@@ -21,6 +21,7 @@ class Page {
   std::vector<std::string> navigator;
   std::vector<std::string> text;
   std::map<size_t, size_t> option_pagenum;
+  std::vector<size_t> option_pagenums;
 
  public:
   //explicit Page(int n) : page_num(n) {}
@@ -31,7 +32,8 @@ class Page {
   unsigned int get_depth() { return depth; }
   void set_depth(unsigned int d) { depth = d; }
   std::vector<std::string> & get_navigator() { return navigator; }
-  size_t get_next_page_num(size_t option_num) { return option_pagenum[option_num]; }
+  std::vector<size_t> & get_option_pagenums() { return option_pagenums; }
+  size_t get_next_page_num(size_t option_num) { return option_pagenums[option_num - 1]; }
   size_t check_page_num(std::string num) {
     //reference: strtol in man page
     //reference:  my Eval 1 function check_int()
@@ -43,11 +45,11 @@ class Page {
       exit(EXIT_FAILURE);
     }
     if (endptr == num.c_str()) {
-      std::cerr << "No digits were found\n";
+      std::cerr << "Page number invalid: No digits were found\n";
       exit(EXIT_FAILURE);
     }
     if (*endptr != '\0') {
-      std::cerr << "Page number invalid\n";
+      std::cerr << "Page number invalid: num + char\n";
       exit(EXIT_FAILURE);
     }
     return page_num;
@@ -85,6 +87,7 @@ class Page {
   }
   void store_page() {
     check_path_format();
+    //std::cout << "after check_path_format\n";
     //reference: MLP079_sort_cpp
     std::ifstream file;
     //reference: string::c_str in cplusplus.com
@@ -99,45 +102,55 @@ class Page {
         lines.push_back(line);
       }
       //store lines into page
-      size_t option_num = 1;
-      std::vector<std::string>::iterator it = lines.begin();
-      if (!it->compare("WIN") || !it->compare("LOSE")) {
+      //size_t option_num = 1;
+      size_t line_slash;
+      if (!lines[0].compare("WIN") || !lines[0].compare("LOSE")) {
         //std::cout << "win page\n\n";
-        navigator.push_back(*it);
-        ++it;
+        navigator.push_back(lines[0]);
+        if (lines[1][0] != '#') {
+          std::cerr << "lack slash\n";
+          exit(EXIT_FAILURE);
+        }
+        line_slash = 1;
       }
       else {
-        while ((*it)[0] != '#') {
-          navigator.push_back(*it);
-          //store option_pagenum
-
-          //reference: string::find in cplusplus.com
-          std::size_t found;
-          std::string option;
-          found = it->find(":");
-          if (found != std::string::npos) {
-            option = it->substr(0, it->length() - found);
+        bool slash = false;
+        for (size_t i = 0; i < lines.size(); i++) {
+          //std::vector<std::string>::iterator it = lines.begin();
+          if (lines[i][0] != '#') {
+            //navigator.push_back(*it);
+            //store option_pagenum
+            //reference: string::find in cplusplus.com
+            std::size_t found;
+            std::string option;
+            found = lines[i].find(":");
+            if (found != std::string::npos) {
+              option = lines[i].substr(0, found);
+            }
+            else {
+              std::cerr << "Invalid page: option lack ':'\n";
+              exit(EXIT_FAILURE);
+            }
+            option_pagenums.push_back(check_page_num(option));
+            //std::string option_text = it->substr(found+1);
+            navigator.push_back(lines[i].substr(found + 1));
           }
           else {
-            std::cerr << "Invalid page: option lack ':'\n";
-            exit(EXIT_FAILURE);
+            slash = true;
+            line_slash = i;
+            break;
           }
-          size_t option_page_num;
-          std::stringstream option_ss(option);
-          option_ss >> option_page_num;
-          option_pagenum[option_num] = option_page_num;
-          //std::cout << "option" << option_num << " - " << option_page_num << std::endl;
-
-          option_num++;
-          ++it;
+        }
+        if (slash == false) {
+          std::cerr << "No slash\n";
+          exit(EXIT_FAILURE);
         }
       }
-      ++it;
-      while (it != lines.end()) {
-        text.push_back(*it);
-        ++it;
+      for (size_t i = line_slash + 1; i < lines.size(); i++) {
+        text.push_back(lines[i]);
       }
     }
+
     else {
       std::cerr << "Failed to open file\n";
       exit(EXIT_FAILURE);
@@ -168,6 +181,11 @@ std::ostream & operator<<(std::ostream & stream, const Page & page) {
   else {
     stream << "What would you like to do?\n";
     stream << std::endl;
+    for (size_t i = 0; i < page.navigator.size(); i++) {
+      stream << " " << i + 1 << ". ";
+      stream << page.navigator[i] << std::endl;
+    }
+    /*
     std::vector<std::string>::const_iterator jt = page.navigator.begin();
     int i = 1;
     while (jt != page.navigator.end()) {
@@ -183,6 +201,7 @@ std::ostream & operator<<(std::ostream & stream, const Page & page) {
       i++;
       ++jt;
     }
+    */
   }
   return stream;
 }
