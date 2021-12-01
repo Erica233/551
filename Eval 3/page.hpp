@@ -54,40 +54,27 @@ class Page {
     }
     return page_num;
   }
+  //reference: string::find in cplusplus.com
+  std::size_t extract_str(std::string str, std::string remove_part) {
+    std::size_t found = str.find(remove_part);
+    if (found == std::string::npos) {
+      std::cerr << "invalid: not found remove_part\n";
+      exit(EXIT_FAILURE);
+    }
+    return found;
+  }
   void check_path_format() {
     //store path
-    //reference: string::find in cplusplus.com
-    //std::cout << "\nstore_page(): \npath: " << path << std::endl;
-    std::size_t found;
-    std::string num;
     std::string former_part("/page");
     std::string latter_part(".txt");
-    found = path.find(former_part);
-    //found = path.find("/path");
-    if (found != std::string::npos) {
-      //dir_name = path.substr(0, found);
-      //page_name = path.substr(found + 1);
-      //std::cout << "dir_name: " << dir_name << "\npage_name: " << page_name << std::endl;
-    }
-    else {
-      std::cerr << "invalid input file name\n";
-      exit(EXIT_FAILURE);
-    }
+    std::size_t found = extract_str(path, former_part);
     std::size_t found_tail = path.find(latter_part);
-    if (found_tail != std::string::npos) {
-      num = path.substr(found + former_part.length(),
-                        found_tail - found - former_part.length());
-      //std::cout << "num: " << num << std::endl;
-    }
-    else {
-      std::cerr << "invalid input file name\n";
-      exit(EXIT_FAILURE);
-    }
+    std::string num = path.substr(found + former_part.length(),
+                                  found_tail - found - former_part.length());
     page_num = check_page_num(num);
   }
   size_t store_navigator(std::vector<std::string> & lines) {
     //store lines into page
-    //size_t option_num = 1;
     size_t line_slash;
     if (!lines[0].compare("WIN") || !lines[0].compare("LOSE")) {
       //std::cout << "win page\n\n";
@@ -101,23 +88,11 @@ class Page {
     else {
       bool slash = false;
       for (size_t i = 0; i < lines.size(); i++) {
-        //std::vector<std::string>::iterator it = lines.begin();
         if (lines[i][0] != '#') {
-          //navigator.push_back(*it);
           //store option_pagenum
-          //reference: string::find in cplusplus.com
-          std::size_t found;
-          std::string option;
-          found = lines[i].find(":");
-          if (found != std::string::npos) {
-            option = lines[i].substr(0, found);
-          }
-          else {
-            std::cerr << "Invalid page: option lack ':'\n";
-            exit(EXIT_FAILURE);
-          }
+          std::size_t found = extract_str(lines[i], ":");
+          std::string option = lines[i].substr(0, found);
           option_pagenums.push_back(check_page_num(option));
-          //std::string option_text = it->substr(found+1);
           navigator.push_back(lines[i].substr(found + 1));
         }
         else {
@@ -140,7 +115,7 @@ class Page {
     std::ifstream file;
     //reference: string::c_str in cplusplus.com
     char * cpath = new char[path.length() + 1];
-    std::strcpy(cpath, path.c_str());  //remeber to delete[]
+    std::strcpy(cpath, path.c_str());  //remember to delete[]
     file.open(cpath);
     delete[] cpath;
     if (file.is_open()) {
@@ -155,7 +130,6 @@ class Page {
         text.push_back(lines[i]);
       }
     }
-
     else {
       std::cerr << "Failed to open file\n";
       exit(EXIT_FAILURE);
