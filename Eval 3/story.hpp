@@ -96,23 +96,6 @@ class Story {
         std::vector<size_t> & option_pagenums = pages_vec[i].get_option_pagenums();
         //std::cout << "page with options: \n";
         for (size_t j = 0; j < option_pagenums.size(); j++) {
-          /*
-	  //reference: string::find in cplusplus.com
-          std::size_t found;
-          std::string option;
-          found = navigator[j].find(":");
-          if (found != std::string::npos) {
-            option = navigator[j].substr(0, navigator[j].length() - found);
-          }
-          else {
-            std::cerr << "Invalid page: option lack ':'\n";
-            exit(EXIT_FAILURE);
-          }
-          size_t option_page_num;
-          std::stringstream option_ss(option);
-          option_ss >> option_page_num;
-	  */
-          //std::cout << "option page number: " << option_page_num << std::endl;
           if (0 < option_pagenums[j] && option_pagenums[j] <= pages_vec.size()) {
             //std::cout << option_page_num << " is a referenced page number\n";
             neighbors[i].insert(option_pagenums[j]);
