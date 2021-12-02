@@ -16,8 +16,8 @@ class Story {
   std::set<size_t> valid_page_num;
   std::vector<std::set<size_t> > neighbor_sets;
   std::vector<std::vector<size_t> > neighbors;
-  std::vector<std::vector<size_t> > win_paths;
-  std::vector<std::vector<size_t> > win_path_choices;
+  std::set<std::vector<size_t> > win_paths;
+  //std::vector<std::vector<size_t> > win_path_choices;
 
  public:
   Story(char * dir) : story_name(dir), win(0), lose(0) {}
@@ -52,30 +52,31 @@ class Story {
     std::cout << "\n";
   }
   size_t find_choice(size_t curr_pagenum, size_t next_pagenum) {
-    size_t choice;
     for (size_t i = 0; i < neighbors[curr_pagenum - 1].size(); i++) {
       if (next_pagenum == neighbors[curr_pagenum - 1][i]) {
-        choice = i + 1;
+        return i + 1;
       }
     }
-    return choice;
+    return 0;
   }
 
   void print_win_paths() {
     if (win_paths.size() == 0) {
       std::cout << "This story is unwinnable!\n";
     }
-    for (size_t i = 0; i < win_paths.size(); i++) {
+    for (std::set<std::vector<size_t> >::iterator it = win_paths.begin();
+         it != win_paths.end();
+         ++it) {
       //std::cout << "curr_path: ";
-      for (size_t j = 0; j < win_paths[i].size(); j++) {
-        size_t curr_pagenum = win_paths[i][j];
-        if (j + 1 == win_paths[i].size()) {
-          std::cout << win_paths[i][j] << "(win)";
+      for (size_t j = 0; j < it->size(); j++) {
+        size_t curr_pagenum = (*it)[j];
+        if (j + 1 == it->size()) {
+          std::cout << (*it)[j] << "(win)";
           break;
         }
-        size_t next_pagenum = win_paths[i][j + 1];
+        size_t next_pagenum = (*it)[j + 1];
         size_t choice_num = find_choice(curr_pagenum, next_pagenum);
-        std::cout << win_paths[i][j] << "(" << choice_num << "),";
+        std::cout << (*it)[j] << "(" << choice_num << "),";
       }
       std::cout << "\n";
     }
@@ -108,7 +109,7 @@ class Story {
         //std::cout << "curr_pagenum is win page\n";
         //print_path(curr_path);
         //std::cout << "\n";
-        win_paths.push_back(curr_path);
+        win_paths.insert(curr_path);
       }
       if (visited.find(curr_pagenum) == visited.end()) {
         //std::cout << "current pagenum is not in visited\n";
