@@ -22,8 +22,18 @@ class Story {
       std::cout << "page " << x + 1 << "'s depth: " << pages_vec[x].get_depth() << "\n";
     }
   }
+  void print_depth() {
+    for (size_t i = 0; i < pages_vec.size(); i++) {
+      std::cout << "Page " << i + 1;
+      if (pages_vec[i].get_depth() == std::numeric_limits<unsigned int>::max()) {
+        std::cout << " is not reachable\n";
+      }
+      else {
+        std::cout << ":" << pages_vec[i].get_depth() << std::endl;
+      }
+    }
+  }
   void cal_depth() {
-    //printDepth();
     //bfs
     //reference: psuedo-code in AOP Chapter 25.3.3
     std::set<size_t> visited;
@@ -49,19 +59,7 @@ class Story {
         }
       }
     }
-    //printDepth();
-    for (size_t i = 0; i < pages_vec.size(); i++) {
-      std::cout << "Page " << i + 1;
-      if (pages_vec[i].get_depth() == std::numeric_limits<unsigned int>::max()) {
-        std::cout << " is not reachable\n";
-      }
-      else {
-        std::cout << ":" << pages_vec[i].get_depth() << std::endl;
-      }
-    }
   }
-
-  //Page& get_pages_vec(){return }
   std::vector<Page> & get_pages_vec() { return pages_vec; }
   bool is_end_page(size_t n) {
     std::vector<size_t>::iterator lose =
@@ -79,6 +77,7 @@ class Story {
   //reference:  my Eval 1 function check_int()
   bool is_valid_choice(std::string num, size_t page_num) {
     //std::cout << "in is_valid_choice(): \n";
+    //std::cout << "current page num: " << page_num << " input: " << num << "\n";
     char * endptr;
     errno = 0;
     size_t choice_num = strtoul(num.c_str(), &endptr, 10);
