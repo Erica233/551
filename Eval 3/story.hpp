@@ -33,20 +33,20 @@ class Story {
       }
     }
   }
-  void cal_depth() {
-    //bfs
+  template<typename WorkList>
+  void search() {
     //reference: psuedo-code in AOP Chapter 25.3.3
     std::set<size_t> visited;
-    std::queue<size_t> queue;
+    WorkList todo;
     size_t i = 1;
     pages_vec[i - 1].set_depth(0);
-    queue.push(i);
+    todo.push(i);
     visited.insert(i);
     size_t curr;
     std::set<size_t>::iterator jt;
-    while (queue.size() != 0) {
-      curr = queue.front();
-      queue.pop();
+    while (todo.size() != 0) {
+      curr = todo.front();
+      todo.pop();
       for (std::set<size_t>::iterator it = neighbors[curr - 1].begin();
            it != neighbors[curr - 1].end();
            ++it) {
@@ -55,7 +55,7 @@ class Story {
             pages_vec[(*it) - 1].set_depth(pages_vec[curr - 1].get_depth() + 1);
           }
           visited.insert(*it);
-          queue.push(*it);
+          todo.push(*it);
         }
       }
     }
