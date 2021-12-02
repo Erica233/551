@@ -6,7 +6,6 @@
 #include <fstream>
 #include <iostream>
 #include <limits>
-#include <map>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -20,7 +19,7 @@ class Page {
   //std::string page_name;
   std::vector<std::string> navigator;
   std::vector<std::string> text;
-  std::map<size_t, size_t> option_pagenum;
+  //std::map<size_t, size_t> option_pagenum;
   std::vector<size_t> option_pagenums;
 
  public:
@@ -33,7 +32,11 @@ class Page {
   void set_depth(unsigned int d) { depth = d; }
   std::vector<std::string> & get_navigator() { return navigator; }
   std::vector<size_t> & get_option_pagenums() { return option_pagenums; }
-  size_t get_next_page_num(size_t option_num) { return option_pagenums[option_num - 1]; }
+  size_t get_num_options() { return option_pagenums.size(); }
+  size_t get_next_page_num(size_t option_num) {
+    //std::cout << "in Page class: get_next_page_num():\n";
+    return option_pagenums[option_num - 1];
+  }
   size_t check_page_num(std::string num) {
     //reference: strtol in man page
     //reference:  my Eval 1 function check_int()
