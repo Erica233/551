@@ -27,6 +27,7 @@ class Page {
   Page() : depth(std::numeric_limits<unsigned int>::max()) {}
   explicit Page(char * filename) :
       depth(std::numeric_limits<unsigned int>::max()),
+
       path(filename) {}
   unsigned int get_depth() { return depth; }
   void set_depth(unsigned int d) { depth = d; }
