@@ -53,7 +53,7 @@ class Story {
     for (size_t i = 0; i < pages_vec.size(); i++) {
       std::cout << "Page " << i + 1;
       if (pages_vec[i].get_depth() == std::numeric_limits<unsigned int>::max()) {
-        std::cout << "is not reachable\n";
+        std::cout << " is not reachable\n";
       }
       else {
         std::cout << ":" << pages_vec[i].get_depth() << std::endl;
