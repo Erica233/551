@@ -11,7 +11,7 @@ int main(int argc, char ** argv) {
   story.check_valid_story();
 
   //determine story depth
-  story.cal_depth();
-
+  story.search<std::queue<size_t> >();
+  story.print_depth();
   return EXIT_SUCCESS;
 }
