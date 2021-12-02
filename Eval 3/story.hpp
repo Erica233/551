@@ -75,8 +75,67 @@ class Story {
   }
   Page & get_page_n(size_t n) { return pages_vec[n - 1]; }
   size_t get_story_size() { return pages_vec.size(); }
+  //reference: strtol in man page
+  //reference:  my Eval 1 function check_int()
+  bool is_valid_choice(std::string num, size_t page_num) {
+    //std::cout << "in is_valid_choice(): \n";
+    //std::cout << "current page num: " << page_num << " input: " << num << "\n";
+    char * endptr;
+    errno = 0;
+    size_t choice_num = strtoul(num.c_str(), &endptr, 10);
+    if ((errno == ERANGE && choice_num == ULONG_MAX) || choice_num == 0) {
+      return false;
+    }
+    if (endptr == num.c_str()) {
+      return false;
+    }
+    /*
+    if (*endptr != '\0') {
+      //std::cout << "That is not a valid choice, please try again\n";
+      return false;
+    }
+    */
+    if (choice_num < 1 || choice_num > pages_vec[page_num - 1].get_num_options()) {
+      //std::cout << "is_valid_choice(): returns false ---- choice out of range\n";
+      return false;
+    }
+    //std::cout << "is_valid_choice(): returns true\n";
+    return true;
+  }
+  size_t start_story(std::istream & in) {
+    //std::cout << "in start_story(): \n";
+    // std::vector<Page> & pages_vec = story.get_pages_vec();
+    std::cout << pages_vec[0];
+    size_t page_num = 1;
+    size_t choice_num;
+    std::string input;
+    while (in >> input) {
+      //check_page_num();
+      //std::cout << "input: " << input << "\n";
+      if (!is_valid_choice(input, page_num)) {
+        std::cout << "That is not a valid choice, please try again\n";
+        continue;
+      }
+      char * endptr;
+      choice_num = strtoul(input.c_str(), &endptr, 10);
+      page_num = pages_vec[page_num - 1].get_next_page_num(choice_num);
+      std::cout << pages_vec[page_num - 1];
+      if (is_end_page(page_num)) {
+        break;
+      }
+      if (*endptr != '\0') {
+        std::cout << "That is not a valid choice, please try again\n";
+      }
+      //std::cout << story.get_page_n(page_num);
+    }
+    if (!is_end_page(page_num)) {
+      std::cerr << "end with not ending page\n";
+      exit(EXIT_FAILURE);
+    }
+    return page_num;
+  }
   void check_valid_story() {
-    //    std::cout << "check_valid_story(): \n";
+    //std::cout << "check_valid_story(): \n";
     //std::cout << "pages_vec.size(): " << pages_vec.size() << std::endl;
     valid_page_num.insert(1);
     for (size_t i = 0; i < pages_vec.size(); i++) {
@@ -99,7 +158,7 @@ class Story {
           if (0 < option_pagenums[j] && option_pagenums[j] <= pages_vec.size()) {
             //std::cout << option_page_num << " is a referenced page number\n";
             neighbors[i].insert(option_pagenums[j]);
-            //            std::cout << "i=" << i << " j=" << j << " neighbors" << option_page_num;
+            //std::cout << "i=" << i << " j=" << j << " neighbors" << option_page_num;
             valid_page_num.insert(option_pagenums[j]);
           }
           else {
@@ -111,19 +170,8 @@ class Story {
       }
     }
     //printNeighbor();
-    for (std::set<size_t>::iterator it = valid_page_num.begin();
-         it != valid_page_num.end();
-         ++it) {
-      //std::cout << "valid_page_num: " << *it << " ";
-    }
-    if (valid_page_num.size() != pages_vec.size()) {
-      std::cout << "pages_vec.size(): " << pages_vec.size() << std::endl;
-      std::cout << "valid_page_num.size(): " << valid_page_num.size() << std::endl;
-      std::cerr << "Invalid story: some pages not referenced by other page\n";
-      exit(EXIT_FAILURE);
-    }
-    if (win != 1 || lose != 1) {
-      std::cerr << "Invalid story: lack lose or win page\n";
+    if (valid_page_num.size() != pages_vec.size() || win != 1 || lose != 1) {
+      std::cerr << "Invalid story: lack reference or win/lose pages\n";
       exit(EXIT_FAILURE);
     }
   }
