@@ -11,10 +11,10 @@ int main(int argc, char ** argv) {
   story.check_valid_story();
 
   //find all the cycle-free winning paths
-  
-  
+
   //determine story depth
   //story.cal_depth();
-
+  story.dfs();
+  story.print_win_paths();
   return EXIT_SUCCESS;
 }
