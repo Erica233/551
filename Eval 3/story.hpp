@@ -80,6 +80,7 @@ class Story {
       std::cout << "\n";
     }
   }
+
   void dfs() {
     //reference: psuedo-code in AOP Chapter 25.3.3
     size_t i = 1;
@@ -135,8 +136,9 @@ class Story {
       }
     }
   }
+
   //template<typename WorkList>
-  void search() {
+  void bfs() {
     //reference: psuedo-code in AOP Chapter 25.3.3
     size_t i = 1;
 
