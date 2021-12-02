@@ -79,7 +79,6 @@ class Story {
   //reference:  my Eval 1 function check_int()
   bool is_valid_choice(std::string num, size_t page_num) {
     //std::cout << "in is_valid_choice(): \n";
-    //std::cout << "current page num: " << page_num << " input: " << num << "\n";
     char * endptr;
     errno = 0;
     size_t choice_num = strtoul(num.c_str(), &endptr, 10);
