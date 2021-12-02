@@ -3,6 +3,8 @@ cyoa-step1 story1/page1.txt
 cyoa-step1 story1/page7.txt
 cyoa-step1 story1/page8.txt
 cyoa-step1 s1cases/page13.txt
+cyoa-step1 repeat_choice/page1.txt
+cyoa-step1 choice_to_self/page1.txt
 
 cyoa-step2 story1 < story1/input1.txt
 cyoa-step2 story1 < story1/input2.txt
@@ -10,6 +12,22 @@ cyoa-step2 unreachable_cycle < unreachable_cycle/input1.txt
 cyoa-step2 two_cycle2 < two_cycle2/input1.txt
 cyoa-step2 story1 < story1/input_invalid_choice.txt
 cyoa-step2 story1 < story1/input_invalid_choice2.txt
+cyoa-step2 repeat_choice < repeat_choice/input1.txt
+cyoa-step2 repeat_choice < repeat_choice/input2.txt
+cyoa-step2 repeat_choice < repeat_choice/input3.txt
+cyoa-step2 choice_to_self < choice_to_self/input.txt
+
+cyoa-step3 unreachable_cycle
+cyoa-step3 two_cycle
+cyoa-step3 two_cycle2
+cyoa-step3 repeat_choice
+cyoa-step3 choice_to_self
+
+cyoa-step4 unreachable_cycle
+cyoa-step4 two_cycle
+cyoa-step4 two_cycle2
+cyoa-step4 choice_to_self
+cyoa-step4 repeat_choice
 
 #error
 cyoa-step1 invalid.txt
