@@ -138,7 +138,6 @@ class Story {
     }
   }
 
-  //template<typename WorkList>
   void bfs() {
     //reference: psuedo-code in AOP Chapter 25.3.3
     size_t i = 1;
@@ -151,65 +150,51 @@ class Story {
     pages_vec[i - 1].set_depth(0);
 
     todo.push(path);
+    int n = 0;
     //visited.insert(i);
     while (todo.size() != 0) {
+      //std::cout << "------------loop " << n << "\n";
+      n++;
       std::vector<size_t> curr_path = todo.front();
       //std::cout << "curr_path: ";
-      for (size_t i = 0; i < curr_path.size(); i++) {
-        //std::cout << curr_path[i] << " ";
-      }
+      //print_path(curr_path);
       //std::cout << "\n";
       todo.pop();
       size_t curr_pagenum = curr_path[curr_path.size() - 1];
       //std::cout << "curr_pagenum: " << curr_pagenum << "\n";
       if (is_win_page(curr_pagenum)) {
         //std::cout << "curr_pagenum is win page\n";
+        //print_path(curr_path);
+        //std::cout << "\n";
+        win_paths.insert(curr_path);
       }
       if (visited.find(curr_pagenum) == visited.end()) {
+        //std::cout << "current pagenum is not in visited\n";
         visited.insert(curr_pagenum);
         //std::cout << curr_pagenum << " is visited\n";
-        for (std::set<size_t>::iterator it = neighbor_sets[curr_pagenum - 1].begin();
-             it != neighbor_sets[curr_pagenum - 1].end();
-             ++it) {
-          if (pages_vec[(*it) - 1].get_depth() >
+        for (size_t j = 0; j < neighbors[curr_pagenum - 1].size(); j++) {
+          //std::cout << "for neighbor: " << neighbors[curr_pagenum - 1][j] << "\n";
+          if (pages_vec[neighbors[curr_pagenum - 1][j] - 1].get_depth() >
               pages_vec[curr_pagenum - 1].get_depth() + 1) {
-            pages_vec[(*it) - 1].set_depth(pages_vec[curr_pagenum - 1].get_depth() + 1);
+            pages_vec[neighbors[curr_pagenum - 1][j] - 1].set_depth(
+                pages_vec[curr_pagenum - 1].get_depth() + 1);
           }
-          curr_path.push_back(*it);
+          //curr_path.push_back(*it);
+          //std::cout << "curr_path: ";
+          //print_path(curr_path);
           todo.push(curr_path);
+          //std::cout << "todo top before add new node\n";
+          //print_path(todo.top());
+          todo.back().push_back(neighbors[curr_pagenum - 1][j]);
+          //std::cout << "todo top after add new node\n";
+          //print_path(todo.top());
+          //std::cout << "curr_path: ";
+          //print_path(curr_path);
         }
       }
     }
   }
-  /*
-  template<typename WorkList>
-  void search() {
-    //reference: psuedo-code in AOP Chapter 25.3.3
-    std::set<size_t> visited;
-    WorkList todo;
-    size_t i = 1;
-    pages_vec[i - 1].set_depth(0);
-    todo.push(i);
-    visited.insert(i);
-    size_t curr;
-    std::set<size_t>::iterator jt;
-    while (todo.size() != 0) {
-      curr = todo.front();
-      todo.pop();
-      for (std::set<size_t>::iterator it = neighbors[curr - 1].begin();
-           it != neighbors[curr - 1].end();
-           ++it) {
-        if (visited.find(*it) == visited.end()) {
-          if (pages_vec[(*it) - 1].get_depth() > pages_vec[curr - 1].get_depth() + 1) {
-            pages_vec[(*it) - 1].set_depth(pages_vec[curr - 1].get_depth() + 1);
-          }
-          visited.insert(*it);
-          todo.push(*it);
-        }
-      }
-    }
-  }
-  */
+
   std::vector<Page> & get_pages_vec() { return pages_vec; }
   bool is_win_page(size_t n) {
     std::vector<size_t>::iterator win =
