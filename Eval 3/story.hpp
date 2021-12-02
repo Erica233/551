@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <queue>
 #include <set>
+#include <stack>
 
 #include "page.hpp"
 
@@ -13,7 +14,10 @@ class Story {
   std::vector<size_t> lose_page_num;
   std::vector<Page> pages_vec;
   std::set<size_t> valid_page_num;
-  std::vector<std::set<size_t> > neighbors;
+  std::vector<std::set<size_t> > neighbor_sets;
+  std::vector<std::vector<size_t> > neighbors;
+  std::vector<std::vector<size_t> > win_paths;
+  std::vector<std::vector<size_t> > win_path_choices;
 
  public:
   Story(char * dir) : story_name(dir), win(0), lose(0) {}
@@ -33,6 +37,148 @@ class Story {
       }
     }
   }
+  void print_path(std::vector<size_t> & curr_path) {
+    std::cout << "curr_path: ";
+    for (size_t i = 0; i < curr_path.size(); i++) {
+      std::cout << curr_path[i] << ",";
+    }
+    std::cout << "\n";
+  }
+  void print_visited(std::set<size_t> & visited) {
+    std::cout << "visited: ";
+    for (std::set<size_t>::iterator it = visited.begin(); it != visited.end(); ++it) {
+      std::cout << *it << " ";
+    }
+    std::cout << "\n";
+  }
+  size_t find_choice(size_t curr_pagenum, size_t next_pagenum) {
+    size_t choice;
+    for (size_t i = 0; i < neighbors[curr_pagenum - 1].size(); i++) {
+      if (next_pagenum == neighbors[curr_pagenum - 1][i]) {
+        choice = i + 1;
+      }
+    }
+    return choice;
+  }
+
+  void print_win_paths() {
+    if (win_paths.size() == 0) {
+      std::cout << "This story is unwinnable!\n";
+    }
+    for (size_t i = 0; i < win_paths.size(); i++) {
+      //std::cout << "curr_path: ";
+      for (size_t j = 0; j < win_paths[i].size(); j++) {
+        size_t curr_pagenum = win_paths[i][j];
+        if (j + 1 == win_paths[i].size()) {
+          std::cout << win_paths[i][j] << "(win)";
+          break;
+        }
+        size_t next_pagenum = win_paths[i][j + 1];
+        size_t choice_num = find_choice(curr_pagenum, next_pagenum);
+        std::cout << win_paths[i][j] << "(" << choice_num << "),";
+      }
+      std::cout << "\n";
+    }
+  }
+  void dfs() {
+    //reference: psuedo-code in AOP Chapter 25.3.3
+    size_t i = 1;
+    std::set<size_t> visited;
+    std::stack<std::vector<size_t> > todo;
+    std::vector<size_t> path;
+    path.push_back(i);
+
+    pages_vec[i - 1].set_depth(0);
+
+    todo.push(path);
+    int n = 0;
+    //visited.insert(i);
+    while (todo.size() != 0) {
+      //std::cout << "------------loop " << n << "\n";
+      n++;
+      std::vector<size_t> curr_path = todo.top();
+      //std::cout << "curr_path: ";
+      //print_path(curr_path);
+      //std::cout << "\n";
+      todo.pop();
+      size_t curr_pagenum = curr_path[curr_path.size() - 1];
+      //std::cout << "curr_pagenum: " << curr_pagenum << "\n";
+      if (is_win_page(curr_pagenum)) {
+        //std::cout << "curr_pagenum is win page\n";
+        //print_path(curr_path);
+        //std::cout << "\n";
+        win_paths.push_back(curr_path);
+      }
+      if (visited.find(curr_pagenum) == visited.end()) {
+        //std::cout << "current pagenum is not in visited\n";
+        visited.insert(curr_pagenum);
+        //std::cout << curr_pagenum << " is visited\n";
+        for (size_t j = 0; j < neighbors[curr_pagenum - 1].size(); j++) {
+          //std::cout << "for neighbor: " << neighbors[curr_pagenum - 1][j] << "\n";
+          if (pages_vec[neighbors[curr_pagenum - 1][j] - 1].get_depth() >
+              pages_vec[curr_pagenum - 1].get_depth() + 1) {
+            pages_vec[neighbors[curr_pagenum - 1][j] - 1].set_depth(
+                pages_vec[curr_pagenum - 1].get_depth() + 1);
+          }
+          //curr_path.push_back(*it);
+          //std::cout << "curr_path: ";
+          //print_path(curr_path);
+          todo.push(curr_path);
+          //std::cout << "todo top before add new node\n";
+          //print_path(todo.top());
+          todo.top().push_back(neighbors[curr_pagenum - 1][j]);
+          //std::cout << "todo top after add new node\n";
+          //print_path(todo.top());
+          //std::cout << "curr_path: ";
+          //print_path(curr_path);
+        }
+      }
+    }
+  }
+  //template<typename WorkList>
+  void search() {
+    //reference: psuedo-code in AOP Chapter 25.3.3
+    size_t i = 1;
+
+    std::set<size_t> visited;
+    std::queue<std::vector<size_t> > todo;
+    std::vector<size_t> path;
+    path.push_back(i);
+
+    pages_vec[i - 1].set_depth(0);
+
+    todo.push(path);
+    //visited.insert(i);
+    while (todo.size() != 0) {
+      std::vector<size_t> curr_path = todo.front();
+      //std::cout << "curr_path: ";
+      for (size_t i = 0; i < curr_path.size(); i++) {
+        //std::cout << curr_path[i] << " ";
+      }
+      //std::cout << "\n";
+      todo.pop();
+      size_t curr_pagenum = curr_path[curr_path.size() - 1];
+      //std::cout << "curr_pagenum: " << curr_pagenum << "\n";
+      if (is_win_page(curr_pagenum)) {
+        //std::cout << "curr_pagenum is win page\n";
+      }
+      if (visited.find(curr_pagenum) == visited.end()) {
+        visited.insert(curr_pagenum);
+        //std::cout << curr_pagenum << " is visited\n";
+        for (std::set<size_t>::iterator it = neighbor_sets[curr_pagenum - 1].begin();
+             it != neighbor_sets[curr_pagenum - 1].end();
+             ++it) {
+          if (pages_vec[(*it) - 1].get_depth() >
+              pages_vec[curr_pagenum - 1].get_depth() + 1) {
+            pages_vec[(*it) - 1].set_depth(pages_vec[curr_pagenum - 1].get_depth() + 1);
+          }
+          curr_path.push_back(*it);
+          todo.push(curr_path);
+        }
+      }
+    }
+  }
+  /*
   template<typename WorkList>
   void search() {
     //reference: psuedo-code in AOP Chapter 25.3.3
@@ -60,7 +206,16 @@ class Story {
       }
     }
   }
+  */
   std::vector<Page> & get_pages_vec() { return pages_vec; }
+  bool is_win_page(size_t n) {
+    std::vector<size_t>::iterator win =
+        std::find(win_page_num.begin(), win_page_num.end(), n);
+    if (win != win_page_num.end()) {
+      return true;
+    }
+    return false;
+  }
   bool is_end_page(size_t n) {
     std::vector<size_t>::iterator lose =
         std::find(lose_page_num.begin(), lose_page_num.end(), n);
@@ -155,7 +310,8 @@ class Story {
         for (size_t j = 0; j < option_pagenums.size(); j++) {
           if (0 < option_pagenums[j] && option_pagenums[j] <= pages_vec.size()) {
             //std::cout << option_page_num << " is a referenced page number\n";
-            neighbors[i].insert(option_pagenums[j]);
+            neighbor_sets[i].insert(option_pagenums[j]);
+            neighbors[i].push_back(option_pagenums[j]);
             //std::cout << "i=" << i << " j=" << j << " neighbors" << option_page_num;
             valid_page_num.insert(option_pagenums[j]);
           }
@@ -214,14 +370,16 @@ class Story {
       i++;
     }
     neighbors.resize(pages_vec.size());
+    neighbor_sets.resize(pages_vec.size());
     //std::cout << "neighbor.size: " << neighbors.size();
     //printNeighbor();
   }
-  void printNeighbor() {
-    std::cout << "neighbor.size: " << neighbors.size() << std::endl;
-    for (size_t i = 0; i < neighbors.size(); i++) {
-      std::cout << "set size: " << neighbors[i].size() << " page " << i + 1 << ": ";
-      for (std::set<size_t>::iterator it = neighbors[i].begin(); it != neighbors[i].end();
+  void printNeighborSet() {
+    std::cout << "neighbor.size: " << neighbor_sets.size() << std::endl;
+    for (size_t i = 0; i < neighbor_sets.size(); i++) {
+      std::cout << "set size: " << neighbor_sets[i].size() << " page " << i + 1 << ": ";
+      for (std::set<size_t>::iterator it = neighbor_sets[i].begin();
+           it != neighbor_sets[i].end();
            ++it) {
         std::cout << *it << ", ";
       }
