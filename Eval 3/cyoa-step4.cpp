@@ -2,7 +2,7 @@
 
 int main(int argc, char ** argv) {
   if (argc != 2) {
-    std::cerr << "Usage: program inputFile\n";
+    std::cerr << "Usage: program inputFolder\n";
     return EXIT_FAILURE;
   }
   //store story
