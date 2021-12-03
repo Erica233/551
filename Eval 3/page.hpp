@@ -15,19 +15,14 @@ class Page {
   unsigned int depth;
   size_t page_num;
   std::string path;
-  //std::string dir_name;
-  //std::string page_name;
   std::vector<std::string> navigator;
   std::vector<std::string> text;
-  //std::map<size_t, size_t> option_pagenum;
   std::vector<size_t> option_pagenums;
 
  public:
-  //explicit Page(int n) : page_num(n) {}
   Page() : depth(std::numeric_limits<unsigned int>::max()) {}
   explicit Page(char * filename) :
       depth(std::numeric_limits<unsigned int>::max()),
-
       path(filename) {}
   unsigned int get_depth() const { return depth; }
   void set_depth(unsigned int d) { depth = d; }
@@ -35,7 +30,6 @@ class Page {
   std::vector<size_t> & get_option_pagenums() { return option_pagenums; }
   size_t get_num_options() const { return option_pagenums.size(); }
   size_t get_next_page_num(size_t option_num) const {
-    //std::cout << "in Page class: get_next_page_num():\n";
     return option_pagenums[option_num - 1];
   }
   size_t check_page_num(std::string num) {
@@ -81,7 +75,6 @@ class Page {
     //store lines into page
     size_t line_slash;
     if (!lines[0].compare("WIN") || !lines[0].compare("LOSE")) {
-      //std::cout << "win page\n\n";
       navigator.push_back(lines[0]);
       if (lines[1][0] != '#') {
         std::cerr << "lack slash\n";
@@ -114,12 +107,11 @@ class Page {
   }
   void store_page() {
     check_path_format();
-    //std::cout << "after check_path_format\n";
     //reference: MLP079_sort_cpp
     std::ifstream file;
     //reference: string::c_str in cplusplus.com
     char * cpath = new char[path.length() + 1];
-    std::strcpy(cpath, path.c_str());  //remember to delete[]
+    std::strcpy(cpath, path.c_str());
     file.open(cpath);
     delete[] cpath;
     if (file.is_open()) {
@@ -139,7 +131,6 @@ class Page {
       exit(EXIT_FAILURE);
     }
     file.close();
-    //delete[] cpath;
   }
 
   friend std::ostream & operator<<(std::ostream & stream, const Page & page);
