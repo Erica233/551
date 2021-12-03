@@ -16,6 +16,7 @@ cyoa-step2 repeat_choice < repeat_choice/input1.txt
 cyoa-step2 repeat_choice < repeat_choice/input2.txt
 cyoa-step2 repeat_choice < repeat_choice/input3.txt
 cyoa-step2 choice_to_self < choice_to_self/input.txt
+cyoa-step2 neg_choice < neg_choice/input1.txt
 
 cyoa-step3 unreachable_cycle
 cyoa-step3 two_cycle
@@ -45,6 +46,8 @@ cyoa-step1 s1cases/page10.txt
 cyoa-step1 s1cases/page11.txt
 cyoa-step1 s1cases/page12.txt
 cyoa-step1 s1cases/page14.txt
+cyoa-step1 neg_page_num/page-1.txt
+cyoa-step1 neg_page_num2/page1.txt
 
 cyoa-step2 broken1 < no_page1/input1.txt
 cyoa-step2 no_page1 < no_page1/input1.txt
@@ -52,5 +55,7 @@ cyoa-step2 lack_ref < lack_ref/input1.txt
 cyoa-step2 lack_lose < lack_lose/input1.txt
 cyoa-step2 lack_win < lack_win/input1.txt
 cyoa-step2 two_cycle < two_cycle/input1.txt
+cyoa-step2 neg_page_num < neg_page_num/input1.txt
+cyoa-step2 neg_page_num2 < neg_page_num2/input1.txt
 cyoa-step2 wrong_form_page < wrong_form_page/input.txt
 cyoa-step2 story1
