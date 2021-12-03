@@ -14,10 +14,8 @@ class Story {
   std::vector<size_t> lose_page_num;
   std::vector<Page> pages_vec;
   std::set<size_t> valid_page_num;
-  std::vector<std::set<size_t> > neighbor_sets;
   std::vector<std::vector<size_t> > neighbors;
   std::set<std::vector<size_t> > win_paths;
-  //std::vector<std::vector<size_t> > win_path_choices;
 
  public:
   Story(char * dir) : story_name(dir), win(0), lose(0) {}
@@ -67,7 +65,6 @@ class Story {
     for (std::set<std::vector<size_t> >::iterator it = win_paths.begin();
          it != win_paths.end();
          ++it) {
-      //std::cout << "curr_path: ";
       for (size_t j = 0; j < it->size(); j++) {
         size_t curr_pagenum = (*it)[j];
         if (j + 1 == it->size()) {
@@ -102,45 +99,24 @@ class Story {
 
     todo.push(path);
     int n = 0;
-    //visited.insert(i);
     while (todo.size() != 0) {
-      //std::cout << "------------loop " << n << "\n";
       n++;
       std::vector<size_t> curr_path = peek(todo);
-      //std::cout << "curr_path: ";
-      //print_path(curr_path);
-      //std::cout << "\n";
       todo.pop();
       size_t curr_pagenum = curr_path[curr_path.size() - 1];
-      //std::cout << "curr_pagenum: " << curr_pagenum << "\n";
       if (is_win_page(curr_pagenum)) {
-        //std::cout << "curr_pagenum is win page\n";
-        //print_path(curr_path);
-        //std::cout << "\n";
         win_paths.insert(curr_path);
       }
       if (visited.find(curr_pagenum) == visited.end()) {
-        //std::cout << "current pagenum is not in visited\n";
         visited.insert(curr_pagenum);
-        //std::cout << curr_pagenum << " is visited\n";
         for (size_t j = 0; j < neighbors[curr_pagenum - 1].size(); j++) {
-          //std::cout << "for neighbor: " << neighbors[curr_pagenum - 1][j] << "\n";
           if (pages_vec[neighbors[curr_pagenum - 1][j] - 1].get_depth() >
               pages_vec[curr_pagenum - 1].get_depth() + 1) {
             pages_vec[neighbors[curr_pagenum - 1][j] - 1].set_depth(
                 pages_vec[curr_pagenum - 1].get_depth() + 1);
           }
-          //curr_path.push_back(*it);
-          //std::cout << "curr_path: ";
-          //print_path(curr_path);
           todo.push(curr_path);
-          //std::cout << "todo top before add new node\n";
-          //print_path(todo.top());
           last(todo).push_back(neighbors[curr_pagenum - 1][j]);
-          //std::cout << "todo top after add new node\n";
-          //print_path(todo.top());
-          //std::cout << "curr_path: ";
-          //print_path(curr_path);
         }
       }
     }
@@ -177,8 +153,6 @@ class Story {
   //reference: strtol in man page
   //reference:  my Eval 1 function check_int()
   bool is_valid_choice(std::string num, size_t page_num) const {
-    //std::cout << "in is_valid_choice(): \n";
-    //std::cout << "current page num: " << page_num << " input: " << num << "\n";
     char * endptr;
     errno = 0;
     size_t choice_num = strtoul(num.c_str(), &endptr, 10);
@@ -188,88 +162,37 @@ class Story {
     if (endptr == num.c_str()) {
       return false;
     }
-    /*
-    if (*endptr != '\0') {
-      //std::cout << "That is not a valid choice, please try again\n";
-      return false;
-    }
-    */
     if (choice_num < 1 || choice_num > pages_vec[page_num - 1].get_num_options()) {
-      //std::cout << "is_valid_choice(): returns false ---- choice out of range\n";
       return false;
     }
-    //std::cout << "is_valid_choice(): returns true\n";
     return true;
   }
-  size_t start_story(std::istream & in) {
-    //std::cout << "in start_story(): \n";
-    // std::vector<Page> & pages_vec = story.get_pages_vec();
-    std::cout << pages_vec[0];
-    size_t page_num = 1;
-    size_t choice_num;
-    std::string input;
-    while (in >> input) {
-      //check_page_num();
-      //std::cout << "input: " << input << "\n";
-      if (!is_valid_choice(input, page_num)) {
-        std::cout << "That is not a valid choice, please try again\n";
-        continue;
-      }
-      char * endptr;
-      choice_num = strtoul(input.c_str(), &endptr, 10);
-      page_num = pages_vec[page_num - 1].get_next_page_num(choice_num);
-      std::cout << pages_vec[page_num - 1];
-      if (is_end_page(page_num)) {
-        break;
-      }
-      if (*endptr != '\0') {
-        std::cout << "That is not a valid choice, please try again\n";
-      }
-      //std::cout << story.get_page_n(page_num);
-    }
-    if (!is_end_page(page_num)) {
-      std::cerr << "end with not ending page\n";
-      exit(EXIT_FAILURE);
-    }
-    return page_num;
-  }
   void check_valid_story() {
-    //std::cout << "check_valid_story(): \n";
-    //std::cout << "pages_vec.size(): " << pages_vec.size() << std::endl;
     valid_page_num.insert(1);
     for (size_t i = 0; i < pages_vec.size(); i++) {
       std::vector<std::string> & navigator = pages_vec[i].get_navigator();
-      //std::cout << "page: " << i + 1;
       if (!navigator[0].compare("WIN")) {
-        //std::cout << "win page\n\n";
         win = 1;
         win_page_num.push_back(i + 1);
       }
       else if (!navigator[0].compare("LOSE")) {
-        //std::cout << "lose page\n\n";
         lose = 1;
         lose_page_num.push_back(i + 1);
       }
       else {
         std::vector<size_t> & option_pagenums = pages_vec[i].get_option_pagenums();
-        //std::cout << "page with options: \n";
         for (size_t j = 0; j < option_pagenums.size(); j++) {
           if (0 < option_pagenums[j] && option_pagenums[j] <= pages_vec.size()) {
-            //std::cout << option_page_num << " is a referenced page number\n";
-            neighbor_sets[i].insert(option_pagenums[j]);
             neighbors[i].push_back(option_pagenums[j]);
-            //std::cout << "i=" << i << " j=" << j << " neighbors" << option_page_num;
             valid_page_num.insert(option_pagenums[j]);
           }
           else {
-            //std::cout << option_page_num << "not referenced page number\n";
             std::cerr << "Invalid story: a option to a page not included\n";
             exit(EXIT_FAILURE);
           }
         }
       }
     }
-    //printNeighbor();
     if (valid_page_num.size() != pages_vec.size() || win != 1 || lose != 1) {
       std::cerr << "Invalid story: lack reference or win/lose pages\n";
       exit(EXIT_FAILURE);
@@ -279,7 +202,6 @@ class Story {
     std::ifstream file;
     file.open(cfilename);
     if (!file.is_open()) {
-      //delete[] cfilename;
       if (page_num == 1) {
         std::cerr << "No page1.txt\n";
         exit(EXIT_FAILURE);
@@ -292,12 +214,10 @@ class Story {
     return true;
   }
   void store_story() {
-    //std::cout << "store_story(): \nstory_name: " << story_name << "\nwin=" << win << " lose=" << lose << std::endl;
     int i = 1;
     std::string former_part("/page");
     std::string latter_part(".txt");
     while (1) {
-      //std::cout << "\n-------------" << i << "th page: ----------------\n";
       std::stringstream num;
       num << i;
       std::string filename = story_name + former_part + num.str() + latter_part;
@@ -312,39 +232,19 @@ class Story {
       page.store_page();
       delete[] cfilename;
       pages_vec.push_back(page);
-      //std::cout << pages_vec[i - 1];
       i++;
     }
     neighbors.resize(pages_vec.size());
-    neighbor_sets.resize(pages_vec.size());
-    //std::cout << "neighbor.size: " << neighbors.size();
-    //printNeighbor();
-  }
-  void printNeighborSet() {
-    std::cout << "neighbor.size: " << neighbor_sets.size() << std::endl;
-    for (size_t i = 0; i < neighbor_sets.size(); i++) {
-      std::cout << "set size: " << neighbor_sets[i].size() << " page " << i + 1 << ": ";
-      for (std::set<size_t>::iterator it = neighbor_sets[i].begin();
-           it != neighbor_sets[i].end();
-           ++it) {
-        std::cout << *it << ", ";
-      }
-      std::cout << "\n";
-    }
   }
   friend std::ostream & operator<<(std::ostream & stream, const Story & story);
 };
 
 std::ostream & operator<<(std::ostream & stream, const Story & story) {
-  //std::cout << "in start_story(): \n";
-  // std::vector<Page> & pages_vec = story.get_pages_vec();
   std::cout << story.pages_vec[0];
   size_t page_num = 1;
   size_t choice_num;
   std::string input;
   while (std::cin >> input) {
-    //check_page_num();
-    //std::cout << "input: " << input << "\n";
     if (!story.is_valid_choice(input, page_num)) {
       std::cout << "That is not a valid choice, please try again\n";
       continue;
@@ -359,7 +259,6 @@ std::ostream & operator<<(std::ostream & stream, const Story & story) {
     if (*endptr != '\0') {
       std::cout << "That is not a valid choice, please try again\n";
     }
-    //std::cout << story.get_page_n(page_num);
   }
   if (!story.is_end_page(page_num)) {
     std::cerr << "end with not ending page\n";
