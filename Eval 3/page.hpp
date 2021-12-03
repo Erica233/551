@@ -29,12 +29,12 @@ class Page {
       depth(std::numeric_limits<unsigned int>::max()),
 
       path(filename) {}
-  unsigned int get_depth() { return depth; }
+  unsigned int get_depth() const { return depth; }
   void set_depth(unsigned int d) { depth = d; }
   std::vector<std::string> & get_navigator() { return navigator; }
   std::vector<size_t> & get_option_pagenums() { return option_pagenums; }
-  size_t get_num_options() { return option_pagenums.size(); }
-  size_t get_next_page_num(size_t option_num) {
+  size_t get_num_options() const { return option_pagenums.size(); }
+  size_t get_next_page_num(size_t option_num) const {
     //std::cout << "in Page class: get_next_page_num():\n";
     return option_pagenums[option_num - 1];
   }
