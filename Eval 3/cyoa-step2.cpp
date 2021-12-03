@@ -11,6 +11,7 @@ int main(int argc, char ** argv) {
   story.check_valid_story();
 
   //begin_story()
-  story.start_story(std::cin);
+  //story.start_story(std::cin);
+  std::cout << story;
   return EXIT_SUCCESS;
 }
