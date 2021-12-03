@@ -92,11 +92,9 @@ void Story::check_valid_story() {
     std::vector<std::string> & navigator = pages_vec[i].get_navigator();
     // Record the win and lose page numbers.
     if (!navigator[0].compare("WIN")) {
-      win = 1;
       win_page_num.push_back(i + 1);
     }
     else if (!navigator[0].compare("LOSE")) {
-      lose = 1;
       lose_page_num.push_back(i + 1);
     }
     else {
@@ -114,7 +112,8 @@ void Story::check_valid_story() {
       }
     }
   }
-  if (valid_page_num.size() != pages_vec.size() || win != 1 || lose != 1) {
+  if (valid_page_num.size() != pages_vec.size() || win_page_num.size() == 0 ||
+      lose_page_num.size() == 0) {
     std::cerr << "Invalid story: lack reference or win/lose pages\n";
     exit(EXIT_FAILURE);
   }
