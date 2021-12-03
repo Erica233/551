@@ -32,109 +32,114 @@ class Page {
   size_t get_next_page_num(size_t option_num) const {
     return option_pagenums[option_num - 1];
   }
-  size_t check_page_num(std::string num) {
-    //reference: strtol in man page
-    //reference:  my Eval 1 function check_int()
-    char * endptr;
-    errno = 0;
-    size_t page_num = strtoul(num.c_str(), &endptr, 10);
-    if ((errno == ERANGE && page_num == ULONG_MAX) || (page_num == 0 && errno != 0)) {
-      std::cerr << "Page number invalid\n";
-      exit(EXIT_FAILURE);
-    }
-    if (endptr == num.c_str()) {
-      std::cerr << "Page number invalid: No digits were found\n";
-      exit(EXIT_FAILURE);
-    }
-    if (*endptr != '\0') {
-      std::cerr << "Page number invalid: num + char\n";
-      exit(EXIT_FAILURE);
-    }
-    return page_num;
-  }
-  //reference: string::find in cplusplus.com
-  std::size_t extract_str(std::string str, std::string remove_part) {
-    std::size_t found = str.find(remove_part);
-    if (found == std::string::npos) {
-      std::cerr << "invalid: not found remove_part\n";
-      exit(EXIT_FAILURE);
-    }
-    return found;
-  }
-  void check_path_format() {
-    //store path
-    std::string former_part("/page");
-    std::string latter_part(".txt");
-    std::size_t found = extract_str(path, former_part);
-    std::size_t found_tail = path.find(latter_part);
-    std::string num = path.substr(found + former_part.length(),
-                                  found_tail - found - former_part.length());
-    page_num = check_page_num(num);
-  }
-  size_t store_navigator(std::vector<std::string> & lines) {
-    //store lines into page
-    size_t line_slash;
-    if (!lines[0].compare("WIN") || !lines[0].compare("LOSE")) {
-      navigator.push_back(lines[0]);
-      if (lines[1][0] != '#') {
-        std::cerr << "lack slash\n";
-        exit(EXIT_FAILURE);
-      }
-      line_slash = 1;
-    }
-    else {
-      bool slash = false;
-      for (size_t i = 0; i < lines.size(); i++) {
-        if (lines[i][0] != '#') {
-          //store option_pagenum
-          std::size_t found = extract_str(lines[i], ":");
-          std::string option = lines[i].substr(0, found);
-          option_pagenums.push_back(check_page_num(option));
-          navigator.push_back(lines[i].substr(found + 1));
-        }
-        else {
-          slash = true;
-          line_slash = i;
-          break;
-        }
-      }
-      if (slash == false) {
-        std::cerr << "No slash\n";
-        exit(EXIT_FAILURE);
-      }
-    }
-    return line_slash;
-  }
-  void store_page() {
-    check_path_format();
-    //reference: MLP079_sort_cpp
-    std::ifstream file;
-    //reference: string::c_str in cplusplus.com
-    char * cpath = new char[path.length() + 1];
-    std::strcpy(cpath, path.c_str());
-    file.open(cpath);
-    delete[] cpath;
-    if (file.is_open()) {
-      std::string line;
-      std::vector<std::string> lines;
-      while (std::getline(file, line)) {
-        lines.push_back(line);
-      }
-      size_t line_slash;
-      line_slash = store_navigator(lines);
-      for (size_t i = line_slash + 1; i < lines.size(); i++) {
-        text.push_back(lines[i]);
-      }
-    }
-    else {
-      std::cerr << "Failed to open file\n";
-      exit(EXIT_FAILURE);
-    }
-    file.close();
-  }
-
+  size_t check_page_num(std::string num);
+  std::size_t extract_str(std::string str, std::string remove_part);
+  void check_path_format();
+  size_t store_navigator(std::vector<std::string> & lines);
+  void store_page();
   friend std::ostream & operator<<(std::ostream & stream, const Page & page);
 };
+size_t Page::check_page_num(std::string num) {
+  //reference: strtol in man page
+  //reference:  my Eval 1 function check_int()
+  char * endptr;
+  errno = 0;
+  size_t page_num = strtoul(num.c_str(), &endptr, 10);
+  if ((errno == ERANGE && page_num == ULONG_MAX) || (page_num == 0 && errno != 0)) {
+    std::cerr << "Page number invalid\n";
+    exit(EXIT_FAILURE);
+  }
+  if (endptr == num.c_str()) {
+    std::cerr << "Page number invalid: No digits were found\n";
+    exit(EXIT_FAILURE);
+  }
+  if (*endptr != '\0') {
+    std::cerr << "Page number invalid: num + char\n";
+    exit(EXIT_FAILURE);
+  }
+  return page_num;
+}
+//reference: string::find in cplusplus.com
+std::size_t Page::extract_str(std::string str, std::string remove_part) {
+  std::size_t found = str.find(remove_part);
+  if (found == std::string::npos) {
+    std::cerr << "invalid: not found remove_part\n";
+    exit(EXIT_FAILURE);
+  }
+  return found;
+}
+void Page::check_path_format() {
+  //store path
+  std::string former_part("/page");
+  std::string latter_part(".txt");
+  std::size_t found = extract_str(path, former_part);
+  std::size_t found_tail = path.find(latter_part);
+  std::string num = path.substr(found + former_part.length(),
+                                found_tail - found - former_part.length());
+  page_num = check_page_num(num);
+}
+size_t Page::store_navigator(std::vector<std::string> & lines) {
+  //store lines into page
+  size_t line_slash;
+  if (!lines[0].compare("WIN") || !lines[0].compare("LOSE")) {
+    navigator.push_back(lines[0]);
+    if (lines[1][0] != '#') {
+      std::cerr << "lack slash\n";
+      exit(EXIT_FAILURE);
+    }
+    line_slash = 1;
+  }
+  else {
+    bool slash = false;
+    for (size_t i = 0; i < lines.size(); i++) {
+      if (lines[i][0] != '#') {
+        //store option_pagenum
+        std::size_t found = extract_str(lines[i], ":");
+        std::string option = lines[i].substr(0, found);
+        option_pagenums.push_back(check_page_num(option));
+        navigator.push_back(lines[i].substr(found + 1));
+      }
+      else {
+        slash = true;
+        line_slash = i;
+        break;
+      }
+    }
+    if (slash == false) {
+      std::cerr << "No slash\n";
+      exit(EXIT_FAILURE);
+    }
+  }
+  return line_slash;
+}
+//
+void Page::store_page() {
+  check_path_format();
+  //reference: MLP079_sort_cpp
+  std::ifstream file;
+  //reference: string::c_str in cplusplus.com
+  char * cpath = new char[path.length() + 1];
+  std::strcpy(cpath, path.c_str());
+  file.open(cpath);
+  delete[] cpath;
+  if (file.is_open()) {
+    std::string line;
+    std::vector<std::string> lines;
+    while (std::getline(file, line)) {
+      lines.push_back(line);
+    }
+    size_t line_slash;
+    line_slash = store_navigator(lines);
+    for (size_t i = line_slash + 1; i < lines.size(); i++) {
+      text.push_back(lines[i]);
+    }
+  }
+  else {
+    std::cerr << "Failed to open file\n";
+    exit(EXIT_FAILURE);
+  }
+  file.close();
+}
 
 std::ostream & operator<<(std::ostream & stream, const Page & page) {
   //print story in the page
