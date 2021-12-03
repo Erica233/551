@@ -1,5 +1,6 @@
 #ifndef __STORY_H__
 #define __STORY_H__
+
 #include <algorithm>
 #include <queue>
 #include <set>
@@ -53,6 +54,10 @@ class Story {
   void store_story();
   friend std::ostream & operator<<(std::ostream & stream, const Story & story);
 };
+
+// Search algorithm.
+// Breadth-first search uses queue, calculates the story depth of each page.
+// Depth-first uses stack, gets all the cycle-free winning path.
 template<typename WorkList>
 void Story::search() {
   //reference: psuedo-code in AOP Chapter 25.3.3
@@ -61,9 +66,8 @@ void Story::search() {
   WorkList todo;
   std::vector<size_t> path;
   path.push_back(i);
-
   pages_vec[i - 1].set_depth(0);
-
+  // Add the start path
   todo.push(path);
   int n = 0;
   while (todo.size() != 0) {
@@ -76,6 +80,7 @@ void Story::search() {
     }
     if (visited.find(curr_pagenum) == visited.end()) {
       visited.insert(curr_pagenum);
+      // Check each neighbor of current page, and update informations.
       for (size_t j = 0; j < neighbors[curr_pagenum - 1].size(); j++) {
         if (pages_vec[neighbors[curr_pagenum - 1][j] - 1].get_depth() >
             pages_vec[curr_pagenum - 1].get_depth() + 1) {
@@ -88,4 +93,5 @@ void Story::search() {
     }
   }
 }
+
 #endif
