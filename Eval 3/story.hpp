@@ -162,10 +162,10 @@ class Story {
     }
     return false;
   }
-  bool is_end_page(size_t n) {
-    std::vector<size_t>::iterator lose =
+  bool is_end_page(size_t n) const {
+    std::vector<size_t>::const_iterator lose =
         std::find(lose_page_num.begin(), lose_page_num.end(), n);
-    std::vector<size_t>::iterator win =
+    std::vector<size_t>::const_iterator win =
         std::find(win_page_num.begin(), win_page_num.end(), n);
     if (win != win_page_num.end() || lose != lose_page_num.end()) {
       return true;
@@ -176,7 +176,7 @@ class Story {
   size_t get_story_size() { return pages_vec.size(); }
   //reference: strtol in man page
   //reference:  my Eval 1 function check_int()
-  bool is_valid_choice(std::string num, size_t page_num) {
+  bool is_valid_choice(std::string num, size_t page_num) const {
     //std::cout << "in is_valid_choice(): \n";
     //std::cout << "current page num: " << page_num << " input: " << num << "\n";
     char * endptr;
@@ -334,3 +334,36 @@ class Story {
   }
   friend std::ostream & operator<<(std::ostream & stream, const Story & story);
 };
+
+std::ostream & operator<<(std::ostream & stream, const Story & story) {
+  //std::cout << "in start_story(): \n";
+  // std::vector<Page> & pages_vec = story.get_pages_vec();
+  std::cout << story.pages_vec[0];
+  size_t page_num = 1;
+  size_t choice_num;
+  std::string input;
+  while (std::cin >> input) {
+    //check_page_num();
+    //std::cout << "input: " << input << "\n";
+    if (!story.is_valid_choice(input, page_num)) {
+      std::cout << "That is not a valid choice, please try again\n";
+      continue;
+    }
+    char * endptr;
+    choice_num = strtoul(input.c_str(), &endptr, 10);
+    page_num = story.pages_vec[page_num - 1].get_next_page_num(choice_num);
+    std::cout << story.pages_vec[page_num - 1];
+    if (story.is_end_page(page_num)) {
+      break;
+    }
+    if (*endptr != '\0') {
+      std::cout << "That is not a valid choice, please try again\n";
+    }
+    //std::cout << story.get_page_n(page_num);
+  }
+  if (!story.is_end_page(page_num)) {
+    std::cerr << "end with not ending page\n";
+    exit(EXIT_FAILURE);
+  }
+  return stream;
+}
