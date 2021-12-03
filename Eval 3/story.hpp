@@ -11,8 +11,6 @@
 class Story {
  private:
   std::string story_name;
-  int win;
-  int lose;
   std::vector<size_t> win_page_num;
   std::vector<size_t> lose_page_num;
   std::vector<Page> pages_vec;
@@ -21,7 +19,7 @@ class Story {
   std::set<std::vector<size_t> > win_paths;
 
  public:
-  Story(char * dir) : story_name(dir), win(0), lose(0) {}
+  Story(char * dir) : story_name(dir) {}
   void print_depth();
   size_t find_choice(size_t curr_pagenum, size_t next_pagenum);
   void print_win_paths();
