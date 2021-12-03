@@ -10,11 +10,8 @@ int main(int argc, char ** argv) {
   story.store_story();
   story.check_valid_story();
 
-  //find all the cycle-free winning paths
-
-  //determine story depth
-  //story.cal_depth();
-  story.dfs();
+  //find and print all the cycle-free winning paths
+  story.search<std::stack<std::vector<size_t> > >();
   story.print_win_paths();
   return EXIT_SUCCESS;
 }
