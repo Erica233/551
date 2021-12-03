@@ -81,12 +81,20 @@ class Story {
       std::cout << "\n";
     }
   }
-
-  void dfs() {
+  template<typename T>
+  T & peek(std::stack<T> & stack) {
+    return stack.top();
+  }
+  template<typename T>
+  T & peek(std::queue<T> & queue) {
+    return queue.front();
+  }
+  template<typename WorkList>
+  void search() {
     //reference: psuedo-code in AOP Chapter 25.3.3
     size_t i = 1;
     std::set<size_t> visited;
-    std::stack<std::vector<size_t> > todo;
+    WorkList todo;
     std::vector<size_t> path;
     path.push_back(i);
 
@@ -98,7 +106,7 @@ class Story {
     while (todo.size() != 0) {
       //std::cout << "------------loop " << n << "\n";
       n++;
-      std::vector<size_t> curr_path = todo.top();
+      std::vector<size_t> curr_path = peek(todo);
       //std::cout << "curr_path: ";
       //print_path(curr_path);
       //std::cout << "\n";
@@ -128,7 +136,7 @@ class Story {
           todo.push(curr_path);
           //std::cout << "todo top before add new node\n";
           //print_path(todo.top());
-          todo.top().push_back(neighbors[curr_pagenum - 1][j]);
+          last(todo).push_back(neighbors[curr_pagenum - 1][j]);
           //std::cout << "todo top after add new node\n";
           //print_path(todo.top());
           //std::cout << "curr_path: ";
@@ -137,64 +145,14 @@ class Story {
       }
     }
   }
-
-  void bfs() {
-    //reference: psuedo-code in AOP Chapter 25.3.3
-    size_t i = 1;
-
-    std::set<size_t> visited;
-    std::queue<std::vector<size_t> > todo;
-    std::vector<size_t> path;
-    path.push_back(i);
-
-    pages_vec[i - 1].set_depth(0);
-
-    todo.push(path);
-    int n = 0;
-    //visited.insert(i);
-    while (todo.size() != 0) {
-      //std::cout << "------------loop " << n << "\n";
-      n++;
-      std::vector<size_t> curr_path = todo.front();
-      //std::cout << "curr_path: ";
-      //print_path(curr_path);
-      //std::cout << "\n";
-      todo.pop();
-      size_t curr_pagenum = curr_path[curr_path.size() - 1];
-      //std::cout << "curr_pagenum: " << curr_pagenum << "\n";
-      if (is_win_page(curr_pagenum)) {
-        //std::cout << "curr_pagenum is win page\n";
-        //print_path(curr_path);
-        //std::cout << "\n";
-        win_paths.insert(curr_path);
-      }
-      if (visited.find(curr_pagenum) == visited.end()) {
-        //std::cout << "current pagenum is not in visited\n";
-        visited.insert(curr_pagenum);
-        //std::cout << curr_pagenum << " is visited\n";
-        for (size_t j = 0; j < neighbors[curr_pagenum - 1].size(); j++) {
-          //std::cout << "for neighbor: " << neighbors[curr_pagenum - 1][j] << "\n";
-          if (pages_vec[neighbors[curr_pagenum - 1][j] - 1].get_depth() >
-              pages_vec[curr_pagenum - 1].get_depth() + 1) {
-            pages_vec[neighbors[curr_pagenum - 1][j] - 1].set_depth(
-                pages_vec[curr_pagenum - 1].get_depth() + 1);
-          }
-          //curr_path.push_back(*it);
-          //std::cout << "curr_path: ";
-          //print_path(curr_path);
-          todo.push(curr_path);
-          //std::cout << "todo top before add new node\n";
-          //print_path(todo.top());
-          todo.back().push_back(neighbors[curr_pagenum - 1][j]);
-          //std::cout << "todo top after add new node\n";
-          //print_path(todo.top());
-          //std::cout << "curr_path: ";
-          //print_path(curr_path);
-        }
-      }
-    }
+  template<typename T>
+  T & last(std::queue<T> & queue) {
+    return queue.back();
   }
-
+  template<typename T>
+  T & last(std::stack<T> & stack) {
+    return stack.top();
+  }
   std::vector<Page> & get_pages_vec() { return pages_vec; }
   bool is_win_page(size_t n) {
     std::vector<size_t>::iterator win =
