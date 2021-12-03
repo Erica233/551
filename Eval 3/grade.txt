@@ -1,6 +1,6 @@
-Grading at 12/03/2021:11:26:22.708280
-For commit ID 9eb65d6342423824ea8076161e7d99555d0af76b
-Grading at Fri Dec  3 06:25:14 EST 2021
+Grading at 12/03/2021:21:24:17.001361
+For commit ID 22feeadc75010f8469e3504ef44db753436b34ac
+Grading at Fri Dec  3 16:23:06 EST 2021
 Checking Step 1 test cases required for extra credit
 
 Compiling cyoa-step1
@@ -168,6 +168,9 @@ Your file matched the expected output
 +-----------------------------------------------------------------------+
 Test case 13 (success): cyoa-step2 repeat_choice < repeat_choice/input1.txt
 Your file matched the expected output
++-----------------------------------------------------------------------+
+Test case 14 (success): cyoa-step2 neg_choice < neg_choice/input1.txt
+Your file matched the expected output
 
 Compiling cyoa-step3
 rm -f *.o *~ cyoa-step1 cyoa-step2 cyoa-step3 cyoa-step4
@@ -177,19 +180,19 @@ g++ -ggdb3 -Wall -Werror -pedantic -std=gnu++98 -c page.cpp
 g++ -o cyoa-step3 cyoa-step3.o story.o page.o
 rm story.o cyoa-step3.o page.o
 +-----------------------------------------------------------------------+
-Test case 14 (success): cyoa-step3 unreachable_cycle
+Test case 15 (success): cyoa-step3 unreachable_cycle
 Your file matched the expected output
 +-----------------------------------------------------------------------+
-Test case 15 (success): cyoa-step3 two_cycle
+Test case 16 (success): cyoa-step3 two_cycle
 Your file matched the expected output
 +-----------------------------------------------------------------------+
-Test case 16 (success): cyoa-step3 two_cycle2
+Test case 17 (success): cyoa-step3 two_cycle2
 Your file matched the expected output
 +-----------------------------------------------------------------------+
-Test case 17 (success): cyoa-step3 repeat_choice
+Test case 18 (success): cyoa-step3 repeat_choice
 Your file matched the expected output
 +-----------------------------------------------------------------------+
-Test case 18 (success): cyoa-step3 choice_to_self
+Test case 19 (success): cyoa-step3 choice_to_self
 Your file matched the expected output
 
 Compiling cyoa-step4
@@ -200,22 +203,22 @@ g++ -ggdb3 -Wall -Werror -pedantic -std=gnu++98 -c page.cpp
 g++ -o cyoa-step4 cyoa-step4.o story.o page.o
 rm story.o cyoa-step4.o page.o
 +-----------------------------------------------------------------------+
-Test case 19 (success): cyoa-step4 repeat_choice
+Test case 20 (success): cyoa-step4 repeat_choice
 Your file matched the expected output
 +-----------------------------------------------------------------------+
-Test case 20 (success): cyoa-step4 repeat_choice2
+Test case 21 (success): cyoa-step4 repeat_choice2
 Your file matched the expected output
 +-----------------------------------------------------------------------+
-Test case 21 (success): cyoa-step4 choice_to_self
+Test case 22 (success): cyoa-step4 choice_to_self
 Your file matched the expected output
 +-----------------------------------------------------------------------+
-Test case 22 (success): cyoa-step4 unreachable_cycle
+Test case 23 (success): cyoa-step4 unreachable_cycle
 Your file matched the expected output
 +-----------------------------------------------------------------------+
-Test case 23 (success): cyoa-step4 two_cycle
+Test case 24 (success): cyoa-step4 two_cycle
 Your file matched the expected output
 +-----------------------------------------------------------------------+
-Test case 24 (success): cyoa-step4 two_cycle2
+Test case 25 (success): cyoa-step4 two_cycle2
 Your file matched the expected output
 
 Compiling cyoa-step1
@@ -226,13 +229,19 @@ g++ -ggdb3 -Wall -Werror -pedantic -std=gnu++98 -c page.cpp
 g++ -o cyoa-step1 cyoa-step1.o story.o page.o
 rm story.o page.o cyoa-step1.o
 +-----------------------------------------------------------------------+
-Test case 25 (error): cyoa-step1 no_page1/page1.txt
+Test case 26 (error): cyoa-step1 no_page1/page1.txt
 Your program successfully indicated a failure case
 +-----------------------------------------------------------------------+
-Test case 26 (error): cyoa-step1 s1cases/page8a.txt
+Test case 27 (error): cyoa-step1 s1cases/page8a.txt
 Your program successfully indicated a failure case
 +-----------------------------------------------------------------------+
-Test case 27 (error): cyoa-step1 s1cases/page11.txt
+Test case 28 (error): cyoa-step1 s1cases/page11.txt
+Your program successfully indicated a failure case
++-----------------------------------------------------------------------+
+Test case 29 (error): cyoa-step1 neg_page_num/page-1.txt
+Your program successfully indicated a failure case
++-----------------------------------------------------------------------+
+Test case 30 (error): cyoa-step1 neg_page_num2/page1.txt
 Your program successfully indicated a failure case
 
 Compiling cyoa-step2
@@ -243,57 +252,32 @@ g++ -ggdb3 -Wall -Werror -pedantic -std=gnu++98 -c page.cpp
 g++ -o cyoa-step2 cyoa-step2.o story.o page.o
 rm cyoa-step2.o story.o page.o
 +-----------------------------------------------------------------------+
-Test case 28 (error): cyoa-step2 no_page1 < no_page1/input1.txt
+Test case 31 (error): cyoa-step2 no_page1 < no_page1/input1.txt
 Your program successfully indicated a failure case
 +-----------------------------------------------------------------------+
-Test case 29 (error): cyoa-step2 broken1 < no_page1/input1.txt
+Test case 32 (error): cyoa-step2 broken1 < no_page1/input1.txt
 Your program successfully indicated a failure case
 +-----------------------------------------------------------------------+
-Test case 30 (error): cyoa-step2 lack_ref < lack_ref/input1.txt
+Test case 33 (error): cyoa-step2 lack_ref < lack_ref/input1.txt
 Your program successfully indicated a failure case
 +-----------------------------------------------------------------------+
-Test case 31 (error): cyoa-step2 lack_lose < lack_lose/input1.txt
+Test case 34 (error): cyoa-step2 lack_lose < lack_lose/input1.txt
 Your program successfully indicated a failure case
 +-----------------------------------------------------------------------+
-Test case 32 (error): cyoa-step2 lack_win < lack_win/input1.txt
+Test case 35 (error): cyoa-step2 lack_win < lack_win/input1.txt
 Your program successfully indicated a failure case
 +-----------------------------------------------------------------------+
-Test case 33 (error): cyoa-step2 wrong_form_page < wrong_form_page/input.txt
+Test case 36 (error): cyoa-step2 wrong_form_page < wrong_form_page/input.txt
 Your program successfully indicated a failure case
 +-----------------------------------------------------------------------+
-Test case 34 (error): cyoa-step2 two_cycle < two_cycle/input1.txt
-page1
-
-What would you like to do?
-
- 1. 2
- 2. 3
-page2
-
-What would you like to do?
-
- 1. 3
-page3
-
-What would you like to do?
-
- 1. 2
-page2
-
-What would you like to do?
-
- 1. 3
-page3
-
-What would you like to do?
-
- 1. 2
-page2
-
-What would you like to do?
-
- 1. 3
+Test case 37 (error): cyoa-step2 neg_page_num < neg_page_num/input1.txt
 Your program successfully indicated a failure case
++-----------------------------------------------------------------------+
+Test case 38 (error): cyoa-step2 neg_page_num2 < neg_page_num2/input1.txt
+Your program successfully indicated a failure case
+
+Grading has taken more than 45 seconds
+Skipping remaining test cases
 
 You have PASSED all of your test cases
 Keep adding test cases until you are satisfied your program is correct
