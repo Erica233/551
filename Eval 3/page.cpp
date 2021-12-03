@@ -13,6 +13,10 @@ size_t Page::check_page_num(std::string num) {
     std::cerr << "Page number invalid\n";
     exit(EXIT_FAILURE);
   }
+  if (!isdigit(num[0])) {
+    std::cerr << "Page number is negative\n";
+    exit(EXIT_FAILURE);
+  }
   return page_num;
 }
 
