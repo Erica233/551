@@ -10,8 +10,8 @@ int main(int argc, char ** argv) {
   story.store_story();
   story.check_valid_story();
 
-  //determine story depth
-  story.search<std::queue<size_t> >();
+  //calculate and print out story depth
+  story.search<std::queue<std::vector<size_t> > >();
   story.print_depth();
   return EXIT_SUCCESS;
 }
